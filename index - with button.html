@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Landing Page</title>
+    <style>
+        .particle {
+            pointer-events: none;
+            position: fixed;
+            background: #007bff;
+            border-radius: 50%;
+            width: 6px;
+            height: 6px;
+            animation: explode 0.8s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png');
+            background-position: 
+                0 0,
+                60px 30px,
+                30px 60px;
+            background-size: 120px 120px;
+            background-repeat: repeat;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: -1;
+            filter: grayscale(60%) brightness(160%);
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            position: relative;
+        }
+        .site-title {
+            text-align: center;
+            color: #222;
+            margin-bottom: 16px;
+            font-size: 4em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 
+                3px 3px 0 rgba(0,0,0,0.1),
+                5px 5px 20px rgba(0,0,0,0.15);
+            line-height: 1.2;
+        }
+        .title-image {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 300px;
+            height: auto;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .about-section {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .alert-inline {
+            font-weight: bold;
+            background: #d32f2f;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            width: fit-content;
+            margin: 0 auto 32px;
+            text-align: center;
+        }
+        /* expandable explanation (morphing toggle) */
+        .explain-toggle {
+            margin-top: 6px;
+            text-align: center;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+        .explain-toggle:focus { outline: none; }
+        .explain-toggle .label,
+        .explain-toggle .full {
+            display: inline-block;
+            transition: opacity 0.28s ease, transform 0.28s ease;
+            vertical-align: middle;
+        }
+        .explain-toggle .label {
+            font-weight: 600;
+            text-decoration: underline;
+            color: inherit;
+        }
+        .explain-toggle .full {
+            opacity: 0;
+            transform: translateY(8px);
+            max-width: 520px;
+            text-align: center;
+            display: block;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.32s ease, opacity 0.28s ease, transform 0.28s ease;
+        }
+        .explain-toggle.open .label {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.98);
+        }
+        .explain-toggle.open .full {
+            opacity: 1;
+            transform: translateY(0);
+            /* when open, max-height is set by JS to the scrollHeight for smooth, content-sized expansion */
+        }
+        /* Modern flat button styles */
+        .main-buttons {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .main-buttons .button {
+            flex: 1 1 0;
+            min-width: 220px;
+            max-width: 100%;
+            height: 100px;
+            /* Ensure text is centered vertically */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 48px;
+            margin: 10px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ff6b9d 0%, #c239b3 100%);
+            box-shadow: 
+                0 8px 0 #8b2a7a,
+                0 10px 15px rgba(0,0,0,0.3),
+                inset 0 2px 0 rgba(255,255,255,0.3),
+                inset 0 -2px 0 rgba(0,0,0,0.2);
+            transition: transform 0.1s, box-shadow 0.1s;
+            font-size: 2em;
+            font-weight: 700;
+            border: none;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+            position: relative;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: linear-gradient(180deg, #ff7dad 0%, #d049c3 100%);
+            box-shadow: 
+                0 8px 0 #8b2a7a,
+                0 12px 20px rgba(0,0,0,0.35),
+                inset 0 2px 0 rgba(255,255,255,0.4),
+                inset 0 -2px 0 rgba(0,0,0,0.2);
+        }
+        .button:active {
+            transform: translateY(4px);
+            box-shadow: 
+                0 4px 0 #8b2a7a,
+                0 6px 10px rgba(0,0,0,0.3),
+                inset 0 2px 0 rgba(255,255,255,0.3),
+                inset 0 -1px 0 rgba(0,0,0,0.2);
+        }
+        .feedback-button {
+            font-size: 0.8em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #e0e3e7;
+            color: #444;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            margin-top: 16px;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            border: none;
+            opacity: 0.85;
+            transition: all 0.32s cubic-bezier(.2,.9,.2,1);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            min-width: 160px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        .feedback-button .embed {
+            display: none;
+            width: 320px;
+            max-height: 0;
+            min-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.32s cubic-bezier(.2,.9,.2,1), opacity 0.32s;
+        }
+        .feedback-button.open {
+            padding: 12px 16px 16px 16px;
+        }
+        .feedback-button.open .embed {
+            display: block;
+            max-height: 400px;
+            min-height: 220px;
+            opacity: 1;
+        }
+        .feedback-button .label {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 0;
+            font-weight: 600;
+            transition: margin-bottom 0.32s cubic-bezier(.2,.9,.2,1);
+        }
+        .feedback-button.open .label {
+            margin-bottom: 12px;
+        }
+        /* .feedback-button.open .label { opacity: 0; } -- removed so label always visible */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://didyougetherefromthebitlylink.neocities.org/goofballgames.png" alt="Goofball Games Logo" class="title-image">
+    <h1 class="site-title">Goofball PIT</h1>
+        
+        <div class="about-section" style="text-align:center;">
+            <p class="alert-inline">⚠️ USE "bit.ly/goofballgames" TO GET BACK HERE! ⚠️</p>
+            <div tabindex="0" class="explain-toggle" id="explainToggle" aria-expanded="false" role="button">
+                <span class="label">What is this?</span>
+                <span class="full">If you ever lose access, just use the bookmark to return. Enjoy exploring all the Goofball Games projects and don't forget to share your feedback below!</span>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="main-buttons">
+                <!-- Replace the # with your actual redirect URLs -->
+                <a href="#" class="button">Goofball Games V2</a>
+                <a href="#" class="button">Puffpaff Shop</a>
+            </div>
+            
+            <!-- Feedback/blocked toggle -->
+            <div tabindex="0" class="feedback-toggle feedback-button" id="feedbackToggle" aria-expanded="false" role="button" style="cursor:pointer;">
+                <span class="label">Is the site blocked?</span>
+                <span class="embed" style="display:none;">
+                    <iframe width="320" height="180" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=BqiniL-gvJv0SrMh" title="YouTube video" frameborder="0" allowfullscreen style="margin-top:10px;border-radius:8px;"></iframe>
+                    <div style="margin-top:12px;font-size:1.05em;color:#333;text-align:center;">
+                        This page is in beta, this will be fixed on release.<br>
+                        there will be a form you can fill out to tell me about your blocking situation
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function(){
+            const toggle = document.getElementById('explainToggle');
+            if (!toggle) return;
+            const label = toggle.querySelector('.label');
+            const full = toggle.querySelector('.full');
+            function setOpen(open){
+                toggle.classList.toggle('open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) {
+                    // set max-height to content height for smooth expansion
+                    full.style.maxHeight = full.scrollHeight + 'px';
+                } else {
+                    full.style.maxHeight = '0px';
+                }
+            }
+            toggle.addEventListener('click', ()=> setOpen(!toggle.classList.contains('open')));
+            toggle.addEventListener('keydown', (e)=>{
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOpen(!toggle.classList.contains('open'));
+                }
+            });
+        })();
+    </script>
+    <script>
+        (function(){
+            const toggle = document.getElementById('feedbackToggle');
+            if (!toggle) return;
+            const label = toggle.querySelector('.label');
+            const embed = toggle.querySelector('.embed');
+            function setOpen(open){
+                toggle.classList.toggle('open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) {
+                    embed.style.display = 'block';
+                    // Wait for display:block to apply, then animate to full height
+                    setTimeout(() => {
+                        embed.style.maxHeight = embed.scrollHeight + 'px';
+                        embed.style.opacity = '1';
+                    }, 10);
+                } else {
+                    embed.style.maxHeight = '0px';
+                    embed.style.opacity = '0';
+                    setTimeout(()=>{embed.style.display='none';}, 320);
+                }
+            }
+            toggle.addEventListener('click', ()=> setOpen(!toggle.classList.contains('open')));
+            toggle.addEventListener('keydown', (e)=>{
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOpen(!toggle.classList.contains('open'));
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
