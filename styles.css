@@ -1,0 +1,1074 @@
+/* Place your CSS styles in this file */
+
+h1 {
+    background-color: transparent;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: normal;
+    color: white;
+}
+
+
+
+
+
+#header {
+    /* Default: header behaves like a normal in-flow element on non-index pages */
+    position: static;
+    z-index: 9999;
+    display: flex;
+    width: 100%;
+    background-color: 	#644240;
+    padding: 10px 0;            /* remove horizontal padding for full width rounding */
+    border-radius: 15px;         /* keeps corners rounded */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5), 0 0 20px 	#322424 inset;
+    font-family: Arial, sans-serif;
+    overflow: hidden;            /* clip inner divs so rounding is preserved */
+}
+
+/* Index-only: keep header fixed at the top and overlay content */
+body.index-page #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.right-half {
+    color: #000;
+}
+
+/* Split header into halves */
+.left-half, .right-half {
+    width: 50%;
+    display: flex;
+    align-items: center;       /* vertical centering */
+    min-width: 0;              /* allow flex items inside to shrink */
+}
+
+/* Center buttons horizontally within the left half */
+.left-half {
+    justify-content: center;   /* centers the nav horizontally in left half */
+}
+
+/* Nav list and buttons */
+#header nav {
+    overflow-x: hidden;               /* remove scrollbar */
+    -webkit-overflow-scrolling: touch;
+}
+
+#header nav ul {
+    display: flex;
+    gap: clamp(0px, 0.4vw, 10px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: center;       /* vertical centering */
+    flex-wrap: nowrap;         /* DO NOT wrap header items */
+    justify-content: center;   /* keep centered */
+}
+
+/* Header items shrink to fit their content; logo link remains auto-sized */
+#header nav ul > li { flex: 0 1 auto; min-width: 0; }
+#header nav ul > a { flex: 0 0 auto; min-width: 0; }
+
+
+
+
+#header nav ul li a {
+    background-color: 	#E5E5E5;
+    color: #000;
+    text-decoration: none;
+    padding: clamp(2px, 0.7vw, 10px) clamp(6px, 1vw, 14px);
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px #A5A2A2;
+    transition: all 0.3s ease;
+    font-size: clamp(8px, 1vw, 15px);
+    white-space: nowrap;         /* keep each button on a single line */
+    overflow: hidden;            /* hide overflow while JS fits text */
+    text-overflow: clip;         /* no ellipsis; we shrink instead */
+    width: auto;                 /* size to content */
+    max-width: clamp(90px, 18vw, 220px); /* cap width so they don't get huge */
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.news-button {
+    background-color: 	#E5E5E5;
+    color: #000;
+    text-decoration: none;
+    padding: 10px 18px;
+    font-weight: bold;
+    font-style: italic;
+    font-family: Arial, sans-serif;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px #A5A2A2;
+    transition: all 0.3s ease;
+}
+
+#header nav ul li a[href="leaderboard.html"]{
+    background-color: #821510;
+    color: white;
+    text-decoration: none;
+    padding: clamp(2px, 0.7vw, 10px) clamp(6px, 1vw, 14px);
+    font-weight: bold;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px #821510;
+    transition: all 0.3s ease;
+    font-size: clamp(8px, 1vw, 15px);
+}
+
+
+#header nav ul li a[href="leaderboard.html"]:hover {
+    background-color: #f0e6da;
+    color: #111;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px #f0e6da, 0 6px 20px #f0e6da;
+}
+
+#header nav ul li a:hover {
+    background-color: #821510;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px #821510, 0 6px 20px #821510;
+}
+
+
+
+#fullscreen-btn {
+    position: fixed;
+    bottom: 20px; /* distance from bottom */
+    right: 20px;  /* distance from right (use left: 20px; if you want bottom-left) */
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 9999; /* ensures it stays on top of everything */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+fullscreen-btn:hover {
+    background-color: #555;
+}
+
+
+
+/* Floating fullscreen button */
+fullscreen-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    font-size: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: opacity 0.3s ease;
+}
+
+fullscreen-btn:hover {
+    background-color: #555;
+}
+
+/* Make game fill the screen when fullscreen */
+Eaglercraft:fullscreen {
+    width: 100%;
+    height: 100%;
+}
+
+/* Entire page background */
+body {
+    background-color:  #322424;       /* very dark background */
+    color: #eee;                  /* light text for readability */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    /* reserve vertical space for the fixed header so body content won't sit under it */
+    --header-h: 84px; /* fallback header height; adjust if you change header padding/size */
+    padding-top: 0; /* by default, no offset since header is in-flow */
+    padding-left: 0; padding-right: 0;
+    /* prevent horizontal scrolling site-wide as requested */
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+/* Ensure viewport-relative layouts can use 100% height */
+html, body { height: 100%; }
+
+/* Make iframes fill the screen minus header height on all pages */
+body > iframe,
+#game-container > iframe,
+.game-frame,
+body .game-fullscreen-iframe {
+    width: 100vw;
+    max-width: 100%;
+    height: calc(100vh - var(--header-h)) !important;
+    border: none;
+    display: block;
+}
+
+/* On index, offset content for the overlaid header */
+body.index-page { padding-top: var(--header-h); }
+
+body::before {
+     content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png');
+            background-position: 
+                0 0,
+                60px 30px,
+                30px 60px;
+            background-size: 120px 120px;
+            background-repeat: repeat;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: -1;
+            filter: grayscale(60%) brightness(160%);
+
+}
+
+/* Navigation bar around buttons */
+.nav-bar {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    background-color: #E5E5E5; /* subtle gradient */
+    border-radius: 40px;           /* round pill shape */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 20px #A5A2A2 inset; /* neon-ish shadow */
+    width: 90%;                   /* almost full width */
+    margin: 0 auto;
+    /* make nav-bar height flexible but constrained to the viewport minus header */
+    max-height: calc(100vh - var(--header-h) - 40px);
+    /* only vertical scrolling allowed; prevent horizontal scroll inside nav-bar */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 15px;                /* spacing inside */
+    box-sizing: border-box; 
+    justify-content: flex-start;  /* align left */
+    align-items: flex-start;      /* align top */
+}
+
+/* Make nav-bar columnar: primary buttons on top, favorites at bottom */
+
+
+/* Primary nav uses CSS Grid for uniform button sizing */
+.nav-primary { 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 20vw, 300px), 1fr));
+    gap: 5px;
+    width: 60%;
+    justify-items: stretch;
+    align-items: stretch;
+}
+
+/* All buttons in primary nav have uniform size and grow to fill available space */
+.nav-primary .nav-button {
+    box-sizing: border-box;
+    text-align: center;
+    width: 60%; /* smaller buttons - 60% of grid cell */
+    height: 60%; /* smaller buttons - 60% of grid cell height */
+    min-height: 100px; /* reduced minimum clickable size */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto; /* center the button within the grid cell */
+}
+
+/* Responsive breakpoints for different screen sizes */
+@media (max-width: 1200px) {
+    .nav-primary {
+        grid-template-columns: repeat(auto-fit, minmax(clamp(160px, 22vw, 250px), 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-primary {
+        grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 28vw, 200px), 1fr));
+        gap: 5px;
+    }
+    .nav-primary .nav-button {
+        width: 60%;
+        height: 60%;
+        min-height: 85px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-primary {
+        grid-template-columns: 1fr; /* single column on very small screens */
+        gap: 5px;
+    }
+    .nav-primary .nav-button {
+        width: 60%;
+        height: 60%;
+        min-height: 75px;
+    }
+}
+
+/* Ensure images inside primary nav buttons don't overflow and are centered */
+.nav-primary .nav-button img {
+    max-width: 100%;
+    max-height: 65px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 8px auto 6px;
+    flex-shrink: 0;
+}
+
+/* Responsive image sizing */
+@media (max-width: 768px) {
+    .nav-primary .nav-button img {
+        max-height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-primary .nav-button img {
+        max-height: 40px;
+    }
+}
+
+.favorites-container {
+    width: 98%; /* slightly wider */
+    margin-top: 12px;
+    background: rgba(0,0,0,0.03);
+    padding: 10px 12px; /* slightly taller */
+    border-radius: 12px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.04);
+}
+.favorites-header { font-weight: 800; margin-bottom: 8px; color: #222; }
+/* layout favorites horizontally, wrap to new rows when needed */
+.favorites-list {
+    max-height: 320px; /* allow a couple of rows before scrolling */
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+}
+.favorite-item { width: auto; display: inline-flex; }
+
+/* Ensure nav-button clones inside favorites do not stretch and keep compact size */
+.favorites-list .nav-button { width: auto; display: inline-flex; }
+
+/* Ensure vote UI never shows inside favorites even if cloned */
+.favorites-list .nav-extra,
+.favorites-list .vote-controls,
+.favorites-list .vote-btn,
+.favorites-list .icon,
+.favorites-list .count { display: none !important; }
+
+/* small favorite star in the top-right of each nav-button */
+.fav-star {
+    position: absolute;
+    top: 93px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 16px; /* ensure unicode star is crisp */
+    line-height: 1;
+    cursor: pointer;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    padding: 2px 4px;
+}
+.fav-star.active { color: #ffdd57; /* yellow */ }
+.fav-star:focus { outline: 2px solid rgba(255,221,87,0.35); border-radius: 4px; }
+
+/* Cross-platform symbol/emoji fallback fonts (for Neocities compatibility) */
+.icon,
+.emoji,
+.nav-primary .nav-button .nav-extra .vote-btn .icon,
+.fav-star,
+#fullscreen-btn,
+.side-close,
+.bookmark-alert .alert-icon {
+    font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", "Noto Emoji", sans-serif;
+}
+
+/* Tighter line-height so single-glyph buttons (like ⛶) stay centered */
+#fullscreen-btn { line-height: 1; }
+
+/* Make inline icons crisp and vertically centered */
+.nav-primary .nav-button .nav-extra .vote-btn .icon { display: inline-block; line-height: 1; }
+
+/* Ensure SVG icons inherit currentColor and size cleanly */
+.fav-star { display: inline-flex; align-items: center; justify-content: center; color: inherit; background: transparent; border: none; padding: 4px; cursor: pointer; }
+
+.alert-icon { display: inline-flex; align-items: center; margin: 0 6px; }
+.alert-icon svg { width: 18px; height: 18px; display: block; }
+
+
+
+.nav-button {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #821510;      /* dark base */
+    border-radius: 15px;
+    box-shadow: 0 2px 5px #821510;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    /* Responsive sizing */
+    padding: clamp(8px, 1.5vw, 16px) clamp(10px, 2vw, 24px);
+    font-size: clamp(14px, 1.8vw, 20px);
+    /* Centering content */
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-button-logo {
+    color: black;
+    text-decoration: black;
+    font-weight: bold;
+    background-color: transparent;
+    box-shadow: none;
+    align-items: center;
+    
+    
+    
+
+    
+    
+}
+
+
+
+
+/* Assign each button a different neon color using CSS variables */
+.nav-button:nth-child(1) { --neon: #821510; }
+.nav-button:nth-child(2) { --neon: #821510; }
+.nav-button:nth-child(3) { --neon: #821510; }
+.nav-button:nth-child(4) { --neon: #821510; }
+.nav-button:nth-child(5) { --neon: #821510; }
+.nav-button:nth-child(6) { --neon: #821510; }
+
+/* Hover effect: background glow and color shift */
+.nav-button:hover {
+    background-color: var(--neon, #821510); /* fallback to red if var missing */
+    color: #111;
+    box-shadow: 0 0 7px var(--neon, #821510), 0 3px 10px #821510;
+}
+
+/* Active/click effect */
+.nav-button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(255,255,255,0.3);
+}
+
+/* Animated glow overlay */
+.nav-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--neon) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.nav-button:hover::before {
+    opacity: 0.3;
+}
+
+/* Index-only layout: make buttons wrap around the favorites container */
+body.index-page .nav-bar {
+    display: grid;
+    /* One column grid: buttons row on top, favorites full-width below */
+    grid-template-columns: 100%;
+    grid-auto-flow: row;
+    grid-auto-rows: max-content;
+    row-gap: 12px; /* preserve spacing */
+    align-items: start;
+    align-content: start;
+}
+
+/* Make only the buttons become grid items, not the wrapper row */
+/* Buttons container: horizontal rail, fixed-height by being single row (no wrap) */
+body.index-page .nav-primary { 
+    display: flex; 
+    flex-wrap: wrap;            /* allow new rows when space runs out */
+    gap: 12px; 
+    width: 100%; 
+    overflow-x: hidden;         /* no sideways scroll, wrap instead */
+    overflow-y: visible;
+    /* Place buttons in row 2 so Favorites can sit above in row 1 */
+    grid-row: 2;
+}
+
+/* Ensure index buttons keep intrinsic width in the horizontal rail */
+/* Restore consistent button size similar to prior layout */
+body.index-page .nav-primary .nav-button {
+    /* Fixed card size for tidy grid; adjust width/height as needed */
+    flex: 0 0 250px;            /* each button is 250px wide */
+    width: 250px;
+    min-height: 150px;          /* keep a consistent height */
+}
+
+/* Pin favorites to the right column, first row, with a 10px buffer */
+body.index-page .favorites-container {
+    /* Put Favorites on its own full-width row below all buttons */
+    grid-column: 1 / -1;
+    /* Place Favorites above buttons */
+    grid-row: 1;
+    align-self: start;
+    justify-self: center;
+    width: calc(100% - 20px); /* 10px away from each side of nav-bar */
+    margin: 0 10px;
+}
+
+/* Ensure buttons don't stretch in the grid and keep their current sizing */
+body.index-page .nav-primary .nav-button { justify-self: start; }
+
+
+#floating-text {
+    position: fixed;              /* stays in the corner */
+    bottom: 10px;
+    left: 10px;
+    color: #aaa;                  /* gray text */
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    background: rgba(0,0,0,0.5); /* semi-transparent background */
+    padding: 6px 10px;
+    border-radius: 8px;
+    z-index: 999999;         /* clicks pass through */
+    
+
+    /* Animation */
+    animation: floatFade 3s ease-in-out infinite alternate;
+}
+
+/* Ensure the floating footer link is not purple when visited */
+#floating-text a,
+#floating-text a:visited {
+    color: inherit;            /* use the same gray as the container */
+    text-decoration: none;     /* keep it clean */
+}
+#floating-text a:hover,
+#floating-text a:focus {
+    text-decoration: underline; /* subtle affordance on hover/focus */
+}
+
+/* Keyframes for subtle floating and fading */
+@keyframes floatFade {
+    0% {
+        transform: translateY(0px);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translateY(-5px); /* floats upward slightly */
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0px);
+        opacity: 0.7;
+    }
+}
+
+/* Scoped hover reveal and bottom-extension only for main index nav buttons */
+.nav-primary .nav-button .nav-extra {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 260ms ease, opacity 200ms ease, padding 200ms ease;
+    padding: 0 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.95);
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* Vote controls shown inside the nav-extra area */
+.nav-primary .nav-button .nav-extra .vote-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+}
+.nav-primary .nav-button .nav-extra .vote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 180ms ease, transform 120ms ease;
+}
+.nav-primary .nav-button .nav-extra .vote-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.12); }
+.nav-primary .nav-button .nav-extra .vote-btn .count { font-weight: 700; margin-left: 4px; display: inline-block; width: 22px; text-align: right; font-variant-numeric: tabular-nums; }
+.nav-primary .nav-button .nav-extra .vote-btn.active { background: rgba(255,255,255,0.18); box-shadow: 0 4px 10px rgba(0,0,0,0.25) inset; }
+
+/* Prevent vote controls from expanding their parent: make buttons fixed-width and prevent wrapping */
+.nav-primary .nav-button .nav-extra .vote-controls { flex-wrap: nowrap; }
+.nav-primary .nav-button .nav-extra .vote-btn { min-width: 64px; max-width: 64px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+.nav-primary .nav-button:hover .nav-extra {
+    max-height: 160px; /* room for a short code snippet */
+    opacity: 1;
+    padding: 6px 8px;
+}
+
+/* Bottom extension only for index buttons (doesn't affect header buttons) */
+.nav-primary .nav-button { position: relative; }
+.nav-primary .nav-button::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: -6px;
+    height: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(0,0,0,0));
+    border-radius: 6px;
+    transform-origin: center top;
+    transform: scaleY(0.3);
+    opacity: 0;
+    transition: transform 220ms ease, opacity 200ms ease, height 220ms ease;
+}
+.nav-primary .nav-button:hover::after {
+    transform: scaleY(1);
+    opacity: 1;
+    height: 14px; /* slightly longer when hovered */
+}
+
+/* Make sure code/text inside nav-extra wraps and uses monospace for code snippets if desired */
+.nav-primary .nav-button .nav-extra code,
+.nav-primary .nav-button .nav-extra pre {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.25;
+}
+
+/* Bottom-left spotlight */
+
+
+/* Example usage */
+#index-page {
+    overflow: hidden;
+    font-family: 'Mojangles', ; /* Fallback to sans-serif */
+}
+/* Keep your existing styles for header/buttons */
+
+/* Layout for leaderboard page */
+.leaderboard-layout {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  height: 80vh; /* taller containers */
+}
+
+/* Side nav containers */
+.side-nav {
+  color: black;
+  background: #f5f5f5; /* same light box color */
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 40%;        /* narrower than the middle one */
+  padding: 20px;
+  overflow-y: auto;  /* scroll if tall */
+}
+
+/* Optional: left/right specific tweaks */
+.left-nav {
+  margin-right: 10px;
+}
+
+.right-nav {
+  margin-left: 10px;
+}
+
+
+.nav-button-logo {
+    display: flex;
+    align-items: column;
+    text-decoration: none;
+    padding: 0; /* No padding for logo */
+    background: none; /* No background for logo */
+    box-shadow: none; /* No shadow for logo */
+    width: 150;
+    
+    
+}
+
+.logo-img {
+    height: clamp(24px, 4.5vw, 56px);   /* stronger shrink for logo */
+    width: auto;    /* keeps proportions */
+    padding-left: -9px;
+}
+
+
+
+
+/* News bar on the right */
+
+.news-box {
+  flex: 100;              /* fixed width */
+  max-height: 50px;          /* fixed height */
+  background: #3b2a2a;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-left: 20px;
+  margin-right: 100px;
+  font-size: 0.9rem;
+  font-style: italic;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+
+  overflow-y: auto;          /* vertical scroll if too tall */
+  overflow-x: hidden;        /* prevent sideways scroll */
+  white-space: normal;       /* allow wrapping */
+  word-wrap: break-word;     /* break long words if needed */
+}
+
+
+.about-text {
+    color: black;
+    font-size: 15px;
+    text-align: center;
+    padding: 20px;
+    line-height: 2;
+    font-family: 'Mojangles', sans-serif;
+}
+
+@font-face {
+font-family: 'Mojangles';
+src: url('Mojangles.ttf') format('truetype');
+}
+
+.news-iframe {
+    border: none;
+    outline: none;
+    width: 150%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Bookmark / copy-to-clipboard styles */
+.bookmark-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #d32f2f; /* alert red */
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    box-shadow: none;
+    margin: 12px auto 0 auto; /* vertically same as before */
+    font-weight: 700;
+    cursor: pointer;
+    width: fit-content;
+    position: relative; /* enable left/transform centering */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bookmark-alert .bookmark-text {
+    color: #fff;
+}
+
+
+
+.bookmark-alert .alert-icon { margin-right: 4px; }
+
+.copy-btn {
+    background: #821510;
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(130,21,16,0.25);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.copy-btn:active { transform: translateY(1px) scale(0.995); }
+.copy-btn:hover { box-shadow: 0 6px 12px rgba(130,21,16,0.35); }
+
+.copy-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 220ms ease, transform 220ms ease;
+    z-index: 10000;
+}
+.copy-toast.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.alert-inline { display:none; }
+
+
+
+
+.leaderboard-person {
+    font-weight: bold;
+    color: black;
+}
+
+
+.index-button-image {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    
+    
+}
+
+
+.index-button-image-zap {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+    
+    
+}
+
+
+.alert-inline {
+            font-weight: bold;
+            background: #d32f2f;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            width: fit-content;
+            margin: 0 auto 15px;
+            text-align: center;
+}
+
+            /* Side panel (right edge tab + sliding drawer) */
+
+            .side-panel-wrapper { position: fixed; right: 12px; top: 30%; z-index: 9998; display: flex; align-items: flex-start; pointer-events: none; --drawer-w: 0px; }
+            .side-tab { pointer-events: auto; background: rgba(0,0,0,0.22); border: none; color: #fff; width: 36px; height: 96px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 260ms ease, background 260ms ease; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+            .side-tab:hover { transform: translateX(calc(-4px + var(--drawer-w))); background: rgba(0,0,0,0.32); }
+            .side-tab { transform: translateX(calc(var(--drawer-w) * 1)); }
+            .side-tab svg { transform: rotate(180deg); transition: transform 260ms ease; }
+            .side-panel-wrapper.open .side-tab svg { transform: rotate(0deg); }
+
+            .side-drawer { pointer-events: auto; width: 0; overflow: visible; transform: translateX(16px); transition: width 260ms ease, transform 260ms ease; background: #fff; border-radius: 8px; box-shadow: 0 12px 30px rgba(0,0,0,0.45); display: flex; flex-direction: column; align-items: stretch; overflow: hidden; }
+            .side-panel-wrapper.open .side-drawer { width: auto; transform: translateX(0); }
+            .side-panel-wrapper.open { --drawer-w: calc(var(--drawer-w)); }
+
+            .side-iframe-wrap { padding: 12px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+            .side-iframe { width: 100%; height: 100%; border-radius: 6px; display: block; }
+
+            .side-close { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.06); border: none; padding: 6px 8px; border-radius: 6px; cursor: pointer; z-index: 2; }
+
+            /* default max sizes and behavior */
+            .side-drawer { max-width: 92vw; max-height: 86vh; }
+            .side-drawer[aria-hidden="true"] { visibility: hidden; }
+
+            /* subtle note under the side iframe */
+            .side-note { margin: 0 12px 12px 12px; background: rgba(0,0,0,0.05); color: #333; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 8px 10px; font-size: 12px; line-height: 1.3; }
+
+            /* News edit control: unobtrusive pencil button shown only when hovering the .news-box */
+            .news-box { position: relative; }
+            .news-box .news-edit { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.06); border: none; padding: 6px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: inherit; opacity: 0; pointer-events: none; transition: opacity 180ms ease; }
+            .news-box:hover .news-edit, .news-box:focus-within .news-edit { opacity: 1; pointer-events: auto; }
+            .news-box .news-edit svg { display: block; }
+
+            /* when open, ensure wrapper changes pointer behavior so the drawer is interactive */
+            .side-panel-wrapper.open { pointer-events: auto; }
+
+            /* responsive: on small screens make the drawer float above and nearly full width */
+            @media (max-width: 640px) {
+                .side-panel-wrapper { right: 8px; top: 10%; }
+                .side-tab { height: 70px; }
+            }
+
+/* Custom Game Modal Styles */
+.custom-game-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #E5E5E5;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #821510;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #d32f2f;
+}
+
+.modal-content h2 {
+    color: #821510;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.modal-content p {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.modal-content input:focus {
+    outline: none;
+    border-color: #821510;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 12px;
+    background-color: #821510;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(130, 21, 16, 0.3);
+}
+
+.modal-content button:hover {
+    background-color: #a01a14;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(130, 21, 16, 0.4);
+}
+
+.modal-content button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(130, 21, 16, 0.3);
+}
+
+/* Add game button in header */
+.add-game-btn {
+    background-color: #2e7d32 !important;
+    box-shadow: 0 3px 6px rgba(46, 125, 50, 0.3) !important;
+}
+
+.add-game-btn:hover {
+    background-color: #388e3c !important;
+    box-shadow: 0 0 15px #388e3c, 0 6px 20px #388e3c !important;
+}
+
+/* Custom game buttons */
+.custom-game-button {
+    position: relative;
+    border: 2px dashed #821510 !important;
+    background: linear-gradient(135deg, #821510 0%, #a01a14 100%) !important;
+}
+
+.remove-custom-game {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.remove-custom-game:hover {
+    background: rgba(211, 47, 47, 0.9);
+    transform: scale(1.1);
+}
