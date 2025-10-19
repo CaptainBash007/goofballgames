@@ -10,3 +10,5 @@
 //   appId: "1:...:web:...",
 // };
 
+// TODO: Paste your actual config here
+
