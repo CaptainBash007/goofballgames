@@ -12,7 +12,22 @@
     }catch(e){ /* noop */ }
   })();
 
-  // Removed rename button and instructions by request.
+  // Wire up the header's Rename the tab button to prompt and set the tab title
+  function bindHeaderRenameButton(){
+    try{
+      const hdr = document.getElementById('header');
+      if(!hdr) return;
+      const btn = hdr.querySelector('.rename-tab-btn');
+      if(!btn) return;
+      btn.onclick = function(){
+        try{
+          const current = document.title || '';
+          const next = prompt('Enter a new tab title:', current);
+          if (next && next.trim()) { document.title = next.trim(); }
+        }catch(e){ /* ignore */ }
+      };
+    }catch(e){ /* ignore */ }
+  }
   // Finds or creates a placeholder and injects header.html there
   async function injectHeader(){
     const existing = document.getElementById('header');
@@ -73,7 +88,8 @@
       if (window.newsLoader && typeof window.newsLoader.refresh === 'function') {
         window.newsLoader.refresh();
       }
-  // Rename button removed.
+  // Bind rename button if present in header.html
+  bindHeaderRenameButton();
 
       // As a fallback if header injection were to fail for some reason
     }catch(e){ console.warn('header-loader:', e); /* fallback skipped to avoid undefined refs */ }
