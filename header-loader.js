@@ -174,6 +174,9 @@
     }
     function close(){ modal.classList.remove('open'); }
 
+    // Expose open/close so a delegated handler can call them even if nodes are replaced later
+    try { window.__gbOpenRenameModal = open; window.__gbCloseRenameModal = close; } catch(e){}
+
   // Remove duplicate listeners before adding (idempotent binding)
   try { const clone = btn.cloneNode(true); btn.parentNode.replaceChild(clone, btn); btn = clone; } catch(e){}
   btn.addEventListener('click', open);
@@ -201,6 +204,21 @@
       } catch(e){}
       close();
     });
+
+    // One-time delegated click handler to ensure the button works even if the DOM is replaced later
+    if (!document.__gbRenameDelegated){
+      document.addEventListener('click', function(e){
+        const trigger = e.target && e.target.closest && e.target.closest('.rename-tab-btn');
+        if (trigger){
+          e.preventDefault();
+          try {
+            if (typeof window.__gbOpenRenameModal !== 'function') ensureRenameUI();
+            if (typeof window.__gbOpenRenameModal === 'function') window.__gbOpenRenameModal();
+          } catch(err){}
+        }
+      });
+      document.__gbRenameDelegated = true;
+    }
   }
 
   // Apply saved settings ASAP (works on file://)
