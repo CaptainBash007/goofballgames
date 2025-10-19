@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Custom Game - Goofball Games</title>
+  <script>(function(){try{var q=new URLSearchParams(location.search),t=q.get('t');if(t){document.title=t}}catch(e){}})();</script>
   <link rel="stylesheet" href="styles.css">
   
   <style>
@@ -97,8 +98,12 @@
       return;
     }
     
-    // Update page title
-    document.title = game.name + ' - Goofball Games';
+    // Update page title unless URL param 't' overrides
+    try{
+      var qp=new URLSearchParams(location.search); 
+      var override=qp.get('t');
+      if(!override){ document.title = game.name + ' - Goofball Games'; }
+    }catch(_){ document.title = game.name + ' - Goofball Games'; }
     
     // Create iframe
     const iframe = document.createElement('iframe');
