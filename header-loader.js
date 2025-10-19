@@ -110,8 +110,7 @@
     }
   }
   function ensureRenameUI(){
-    // If button and modal already exist, do nothing
-    if (document.querySelector('.rename-tab-btn') && document.querySelector('.tab-rename-modal')) return;
+    // Always ensure the button and modal exist and listeners are bound (idempotent)
 
     // Ensure button exists (prefer header right-half)
     let btn = document.querySelector('.rename-tab-btn');
@@ -167,8 +166,8 @@
     }
     function close(){ modal.classList.remove('open'); }
 
-  // Remove duplicate listeners before adding (in case ensureRenameUI runs multiple times)
-  try { btn.replaceWith(btn.cloneNode(true)); btn = document.querySelector('.rename-tab-btn'); } catch(e){}
+  // Remove duplicate listeners before adding (idempotent binding)
+  try { const clone = btn.cloneNode(true); btn.parentNode.replaceChild(clone, btn); btn = clone; } catch(e){}
   btn.addEventListener('click', open);
   cancelBtn.addEventListener('click', close);
   modal.addEventListener('click', (e)=>{ if (e.target === modal) close(); });
@@ -185,14 +184,23 @@
 
     resetBtn.addEventListener('click', ()=>{
       saveTabCfg({});
-      // Restore to global defaults
-      applyDefaultTitleAndFavicon();
+      // Restore to global defaults and normalize favicon element
+      try {
+        applyDefaultTitleAndFavicon();
+        let link = document.querySelector('link[rel~="icon"], link[rel="shortcut icon"]');
+        if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+        link.href = DEFAULT_FAVICON;
+      } catch(e){}
       close();
     });
   }
 
   // Apply saved settings ASAP (works on file://)
   applyTabSettings(loadTabCfg());
+  // Re-apply once page fully loaded to override late title changes by other scripts
+  window.addEventListener('load', function(){
+    try { applyTabSettings(loadTabCfg()); } catch(e){}
+  });
   // Apply Google Docs-style defaults if no custom rename exists
   ensureDefaultsIfNoCustom();
   // Finds or creates a placeholder and injects header.html there
