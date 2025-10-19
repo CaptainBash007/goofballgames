@@ -23,6 +23,16 @@
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
         return links.find(l => (l.href||'').includes('styles.css')) || null;
       }
+      function ensureMainLink(){
+        let link = getMainLink();
+        if (!link){
+          link = document.createElement('link');
+          link.rel = 'stylesheet'; link.type = 'text/css'; link.id = 'site-css';
+          link.href = 'styles.css?v=' + Date.now();
+          document.head.appendChild(link);
+        }
+        return link;
+      }
       function bust(link){
         const base = (link.getAttribute('href') || link.href || 'styles.css').split('?')[0];
         const next = base + '?v=' + Date.now();
@@ -51,8 +61,8 @@
         document.head.appendChild(s);
       }
       if (!cssLoaded()){
-        let link = getMainLink();
-        if (!link) link = injectMain(); else bust(link);
+        let link = ensureMainLink();
+        bust(link);
         setTimeout(function(){ if (!cssLoaded()) injectFallback(); }, 300);
       }
     }catch(e){ /* ignore CSS ensure errors */ }
