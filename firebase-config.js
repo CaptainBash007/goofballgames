@@ -10,12 +10,3 @@
 //   appId: "1:...:web:...",
 // };
 
-// TODO: Paste your actual config here
-window.FIREBASE_CONFIG = {
-apiKey: "AIzaSyDw-fygCEwSB4Pztqx8OkFGYKCfpbTu97I",
-authDomain: "goofballgamesvotes.firebaseapp.com",
-projectId: "goofballgamesvotes",
-storageBucket: "goofballgamesvotes.firebasestorage.app",
-messagingSenderId: "579000932429",
-appId: "1:579000932429:web:17077338c0c95f77132404"
-};
