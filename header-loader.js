@@ -11,6 +11,52 @@
       }
     }catch(e){ /* noop */ }
   })();
+
+  // Ensure primary stylesheet is applied across all pages (Chromebook/GitHub Pages cache quirks)
+  (function ensureSiteCss(){
+    try{
+      function cssLoaded(){
+        var cs = getComputedStyle(document.documentElement).getPropertyValue('--gg-css-loaded');
+        return cs && cs.trim() === '1';
+      }
+      function getMainLink(){
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        return links.find(l => (l.href||'').includes('styles.css')) || null;
+      }
+      function bust(link){
+        const base = (link.getAttribute('href') || link.href || 'styles.css').split('?')[0];
+        const next = base + '?v=' + Date.now();
+        link.setAttribute('href', next);
+      }
+      function injectMain(){
+        const l = document.createElement('link');
+        l.rel = 'stylesheet'; l.type = 'text/css'; l.href = 'styles.css?v=' + Date.now();
+        document.head.appendChild(l); return l;
+      }
+      function injectFallback(){
+        if (document.querySelector('style[data-css-fallback]')) return;
+        const s = document.createElement('style');
+        s.setAttribute('data-css-fallback','true');
+        s.textContent = `
+          .rename-tab-btn{ margin-left:auto; margin-right:5px; background:#f0e6da; color:#111; border:none; padding:6px 10px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+          .rename-tab-btn:hover{ background:#ffe9c9; }
+          .tab-rename-modal{ position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:99999; }
+          .tab-rename-modal.open{ display:flex; }
+          .tab-rename-modal .trm-content{ width:min(92vw,440px); background:#fff; border-radius:12px; box-shadow:0 12px 32px rgba(0,0,0,0.35); padding:16px; color:#111; }
+          .tab-rename-modal .trm-actions{ margin-top:12px; display:flex; gap:8px; justify-content:flex-end; }
+          .tab-rename-modal .trm-save{ background:#821510; color:#fff; }
+          .tab-rename-modal .trm-reset{ background:#e0e0e0; color:#111; }
+          .tab-rename-modal .trm-cancel{ background:#f5f5f5; color:#111; }
+        `;
+        document.head.appendChild(s);
+      }
+      if (!cssLoaded()){
+        let link = getMainLink();
+        if (!link) link = injectMain(); else bust(link);
+        setTimeout(function(){ if (!cssLoaded()) injectFallback(); }, 300);
+      }
+    }catch(e){ /* ignore CSS ensure errors */ }
+  })();
   
   // Tab rename helpers (work even if header injection fails, e.g., file://)
   const TAB_STORAGE_KEY = 'gb_tab_custom_v1';
@@ -106,11 +152,11 @@
       document.body.appendChild(modal);
     }
 
-    const titleInput = modal.querySelector('.trm-title-input');
-    const favInput = modal.querySelector('.trm-favicon-input');
-    const saveBtn = modal.querySelector('.trm-save');
-    const resetBtn = modal.querySelector('.trm-reset');
-    const cancelBtn = modal.querySelector('.trm-cancel');
+  let titleInput = modal.querySelector('.trm-title-input');
+  let favInput = modal.querySelector('.trm-favicon-input');
+  let saveBtn = modal.querySelector('.trm-save');
+  let resetBtn = modal.querySelector('.trm-reset');
+  let cancelBtn = modal.querySelector('.trm-cancel');
 
     function open(){
       const cfg = loadTabCfg() || {};
@@ -121,10 +167,12 @@
     }
     function close(){ modal.classList.remove('open'); }
 
-    btn.addEventListener('click', open);
-    cancelBtn.addEventListener('click', close);
-    modal.addEventListener('click', (e)=>{ if (e.target === modal) close(); });
-    modal.addEventListener('keydown', (e)=>{ if (e.key==='Escape') close(); });
+  // Remove duplicate listeners before adding (in case ensureRenameUI runs multiple times)
+  try { btn.replaceWith(btn.cloneNode(true)); btn = document.querySelector('.rename-tab-btn'); } catch(e){}
+  btn.addEventListener('click', open);
+  cancelBtn.addEventListener('click', close);
+  modal.addEventListener('click', (e)=>{ if (e.target === modal) close(); });
+  modal.addEventListener('keydown', (e)=>{ if (e.key==='Escape') close(); });
 
     saveBtn.addEventListener('click', ()=>{
       const title = titleInput.value.trim();
@@ -208,8 +256,9 @@
         window.newsLoader.refresh();
       }
 
-      // Ensure Rename Tab UI after successful injection
-      ensureRenameUI();
+  // Ensure Rename Tab UI after successful injection (and after styles load)
+  ensureRenameUI();
+  setTimeout(ensureRenameUI, 200);
 
       // Add Rename Tab modal behavior
       (function setupRenameTab(){
