@@ -14,8 +14,18 @@
 
   // New, simple Rename Tab: a small button inside the header, 8px from the right edge.
   const SIMPLE_TITLE_KEY = 'gb_simple_title_v1';
-  function getSimpleTitle(){ try { return localStorage.getItem(SIMPLE_TITLE_KEY) || ''; } catch(e){ return ''; } }
-  function setSimpleTitle(t){ try { localStorage.setItem(SIMPLE_TITLE_KEY, t || ''); } catch(e){} }
+  function safeGet(k){
+    try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ''; } catch(e){
+      try { return sessionStorage.getItem(k) || ''; } catch(e2){ return ''; }
+    }
+  }
+  function safeSet(k,v){
+    try { localStorage.setItem(k, v); return true; } catch(e){
+      try { sessionStorage.setItem(k, v); return true; } catch(e2){ return false; }
+    }
+  }
+  function getSimpleTitle(){ return safeGet(SIMPLE_TITLE_KEY); }
+  function setSimpleTitle(t){ safeSet(SIMPLE_TITLE_KEY, t || ''); }
   (function applySavedSimpleTitle(){
     const t = getSimpleTitle(); if (t) { try { document.title = t; } catch(e){} }
   })();
@@ -64,15 +74,108 @@
       }
       // Bind click (idempotent)
       btn.onclick = function(){
-        const current = getSimpleTitle() || document.title || '';
-        const next = prompt('Enter a new tab title:', current) || '';
-        if (next && next.trim()){
-          const t = next.trim();
-          setSimpleTitle(t);
-          try { document.title = t; } catch(e){}
-        }
+        handleRenameClick();
       };
     }catch(e){ /* ignore */ }
+  }
+
+  function applyTitleAndPersist(t){
+    if (!t) return;
+    const title = String(t).trim(); if (!title) return;
+    setSimpleTitle(title);
+    try { document.title = title; } catch(e){}
+  }
+
+  function handleRenameClick(){
+    const current = getSimpleTitle() || document.title || '';
+    let next = '';
+    try {
+      next = prompt('Enter a new tab title:', current) || '';
+    } catch(e) {
+      next = '';
+    }
+    if (next && next.trim()) { applyTitleAndPersist(next); return; }
+    // If prompt was blocked or user canceled, show a tiny inline overlay as a safe fallback
+    showInlineRenameOverlay(current);
+  }
+
+  function showInlineRenameOverlay(current){
+    try{
+      // Avoid duplicates
+      if (document.querySelector('.gb-rename-overlay')) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'gb-rename-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.background = 'rgba(0,0,0,0.35)';
+      overlay.style.zIndex = '100000';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+
+      const panel = document.createElement('div');
+      panel.style.background = '#fff';
+      panel.style.color = '#111';
+      panel.style.borderRadius = '12px';
+      panel.style.boxShadow = '0 12px 32px rgba(0,0,0,0.35)';
+      panel.style.padding = '14px';
+      panel.style.minWidth = '260px';
+      panel.style.maxWidth = '90vw';
+
+      const label = document.createElement('div');
+      label.textContent = 'New tab title:';
+      label.style.marginBottom = '8px';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = current || '';
+      input.style.width = '100%';
+      input.style.boxSizing = 'border-box';
+      input.style.padding = '8px 10px';
+      input.style.border = '1px solid #ddd';
+      input.style.borderRadius = '8px';
+
+      const actions = document.createElement('div');
+      actions.style.marginTop = '10px';
+      actions.style.display = 'flex';
+      actions.style.gap = '8px';
+      actions.style.justifyContent = 'flex-end';
+
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.textContent = 'Save';
+      save.style.background = '#821510';
+      save.style.color = '#fff';
+      save.style.border = 'none';
+      save.style.borderRadius = '8px';
+      save.style.padding = '8px 12px';
+      save.style.cursor = 'pointer';
+
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.textContent = 'Cancel';
+      cancel.style.background = '#f0f0f0';
+      cancel.style.color = '#111';
+      cancel.style.border = 'none';
+      cancel.style.borderRadius = '8px';
+      cancel.style.padding = '8px 12px';
+      cancel.style.cursor = 'pointer';
+
+      actions.appendChild(cancel);
+      actions.appendChild(save);
+      panel.appendChild(label);
+      panel.appendChild(input);
+      panel.appendChild(actions);
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+
+      const close = () => { try { overlay.remove(); } catch(e){} };
+      cancel.onclick = close;
+      overlay.addEventListener('click', (e)=>{ if (e.target === overlay) close(); });
+      panel.addEventListener('keydown', (e)=>{ if (e.key==='Escape') close(); });
+      save.onclick = () => { const val = (input.value||'').trim(); if (val) applyTitleAndPersist(val); close(); };
+      setTimeout(()=> input.focus(), 0);
+    }catch(e){ /* ignore overlay errors */ }
   }
   // Finds or creates a placeholder and injects header.html there
   async function injectHeader(){
