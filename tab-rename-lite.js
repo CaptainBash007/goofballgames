@@ -1,4 +1,4 @@
-(function(){
+(function(){ /* deprecated: no-op */ return;
   var KEY = 'gb_simple_title_v1';
   function safeGet(k){
     try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ''; } catch(e){
