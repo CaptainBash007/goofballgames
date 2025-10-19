@@ -88,8 +88,23 @@
       if (window.newsLoader && typeof window.newsLoader.refresh === 'function') {
         window.newsLoader.refresh();
       }
-  // Bind rename button if present in header.html
-  bindHeaderRenameButton();
+      // Bind rename button if present in header.html
+      bindHeaderRenameButton();
+
+      // Ensure minimal styles for the rename button even if main CSS misses
+      try {
+        const btn = document.querySelector('#header .rename-tab-btn');
+        if (btn) {
+          const cs = getComputedStyle(btn);
+          // If styles are missing (e.g., default button border/background), inject minimal fallback
+          if (!cs || cs.backgroundColor === 'rgba(0, 0, 0, 0)' || cs.backgroundColor === 'transparent') {
+            const style = document.createElement('style');
+            style.setAttribute('data-rename-fallback', 'true');
+            style.textContent = '.rename-tab-btn{margin-left:auto;margin-right:5px;background:#f0e6da;color:#111;border:none;padding:6px 10px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);line-height:1.1;display:inline-flex;align-items:center;justify-content:center} .rename-tab-btn:hover{background:#ffe9c9}';
+            document.head.appendChild(style);
+          }
+        }
+      } catch(e) { /* ignore */ }
 
       // As a fallback if header injection were to fail for some reason
     }catch(e){ console.warn('header-loader:', e); /* fallback skipped to avoid undefined refs */ }
