@@ -30,23 +30,50 @@
   <!-- Two side nav containers -->
   <main class="leaderboard-layout">
     <div class="side-nav left-nav">
-      <h2>Richest People:</h2>
-      <ul>
-        <li><a class="leaderboard-person">Billy - 264 Pirate Cash</a></li>
-        <li>Pirate 2 - 420 gold</li>
-        <li>Pirate 3 - 350 gold</li>
-      </ul>
+      <div class="leaderboard-card">
+        <h2>Top 25 Rich People</h2>
+
+  <!-- Edit me: Add/remove entries below. The script will sort by Pirate Cash (desc) and render the top 25 with ranks. -->
+  <!-- Example: <li data-name="Billy" data-cash="264" data-date="2025-10-01" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></li> -->
+        <ul id="leaderboard-data" class="leaderboard-data" hidden aria-hidden="true">
+          <li data-name="Billy" data-cash="264" data-date="2025-10-01" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ"></li>
+        </ul>
+
+        <div class="leaderboard-header">
+          <div class="lb-head">Rank</div>
+          <div class="lb-head">Name</div>
+          <div class="lb-head">Pirate Cash</div>
+          <div class="lb-head">Date</div>
+        </div>
+
+        <div id="leaderboard-rows" class="leaderboard-rows" role="list"></div>
+
+        <!-- 26th spot: expandable submission info -->
+        <button id="lb-expand-btn" class="lb-expand-btn" type="button" aria-expanded="false">
+          How to submit your score
+        </button>
+        <div id="lb-submit" class="lb-submit" hidden>
+          Email Connor with your name and a video of you counting your Pirate Bucks.
+        </div>
+      </div>
     </div>
 
     <div class="side-nav right-nav">
-      <h2>Tutorial</h2>
-      <p>
-        To register your Pirate Cash amount on the leaderboard, please contact us via the Suggestions/Feedback page with your current Pirate Cash total, and send a video of you counting your pirate cash to verify the amount.
-      </p>
+      <div class="lb-info-card">
+        <img class="lb-side-image" src="goofballgames.png" alt="Goofball Games Pirate Cash" />
+        <h3 class="lb-info-title">About the Leaderboard</h3>
+        <p>
+          This is the leaderboard of Pirate cash, which is Topsail Middle School's currency. Later we will do events with this.
+        </p>
+        <p>
+          You can submit an entry by recording yourself counting your pirate bucks and sending it to connor.
+        </p>
+      </div>
     </div>
   </main>
   <script src="news-loader.js"></script>
   <script src="header-loader.js"></script>
+  <script src="leaderboard.js"></script>
   <div id="floating-text">
   <a href="shop.html">Funded by Puffpaff Shop</a>
 </div>
