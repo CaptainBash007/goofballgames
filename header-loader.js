@@ -22,32 +22,47 @@
   function installSimpleRenameButton(){
     try{
       const header = document.getElementById('header');
-      if (!header) return;
-      // Ensure header is positioning context
-      if (getComputedStyle(header).position === 'static') header.style.position = 'relative';
-      // Create or reuse button
-      let btn = header.querySelector('.gb-simple-rename');
-      if (!btn){
-        btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'gb-simple-rename';
-        btn.textContent = 'Rename tab';
-        // minimalist inline style; anchored 8px from right edge of the header
-        btn.style.position = 'absolute';
-        btn.style.right = '8px';
-        btn.style.top = '50%';
-        btn.style.transform = 'translateY(-50%)';
-        btn.style.padding = '6px 10px';
-        btn.style.border = 'none';
-        btn.style.borderRadius = '10px';
-        btn.style.background = '#f0e6da';
-        btn.style.color = '#111';
-        btn.style.fontWeight = '700';
-        btn.style.cursor = 'pointer';
-        btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
-        header.appendChild(btn);
+      let btn;
+      if (header){
+        // Ensure header is positioning context
+        if (getComputedStyle(header).position === 'static') header.style.position = 'relative';
+        btn = header.querySelector('.gb-simple-rename');
+        if (!btn){
+          btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'gb-simple-rename';
+          btn.textContent = 'Rename tab';
+          // Anchored inside header, 8px from right
+          btn.style.position = 'absolute';
+          btn.style.right = '8px';
+          btn.style.top = '50%';
+          btn.style.transform = 'translateY(-50%)';
+          header.appendChild(btn);
+        }
+        // Minimal required styles (user said style not important, but keep readability)
+        btn.style.padding = '6px 10px'; btn.style.border = 'none'; btn.style.borderRadius = '10px';
+        btn.style.background = '#f0e6da'; btn.style.color = '#111'; btn.style.fontWeight = '700';
+        btn.style.cursor = 'pointer'; btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+      } else {
+        // Fallback: fixed button on the page if header is missing or delayed
+        btn = document.querySelector('body > .gb-simple-rename');
+        if (!btn){
+          btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'gb-simple-rename';
+          btn.textContent = 'Rename tab';
+          btn.style.position = 'fixed';
+          btn.style.top = '8px';
+          btn.style.right = '8px';
+          btn.style.zIndex = '10000';
+          document.body.appendChild(btn);
+        }
+        // Minimal styles
+        btn.style.padding = '6px 10px'; btn.style.border = 'none'; btn.style.borderRadius = '10px';
+        btn.style.background = '#f0e6da'; btn.style.color = '#111'; btn.style.fontWeight = '700';
+        btn.style.cursor = 'pointer'; btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
       }
-      // Bind click
+      // Bind click (idempotent)
       btn.onclick = function(){
         const current = getSimpleTitle() || document.title || '';
         const next = prompt('Enter a new tab title:', current) || '';
