@@ -154,14 +154,14 @@ body.index-page #header {
     transition: background-color 0.3s ease;
 }
 
-fullscreen-btn:hover {
+#fullscreen-btn:hover {
     background-color: #555;
 }
 
 
 
 /* Floating fullscreen button */
-fullscreen-btn {
+#fullscreen-btn {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -177,7 +177,7 @@ fullscreen-btn {
     transition: opacity 0.3s ease;
 }
 
-fullscreen-btn:hover {
+#fullscreen-btn:hover {
     background-color: #555;
 }
 
@@ -199,7 +199,7 @@ body {
     padding-left: 0; padding-right: 0;
     /* prevent horizontal scrolling site-wide as requested */
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: hidden; /* overridden per-page where needed */
 }
 
 /* Ensure viewport-relative layouts can use 100% height */
@@ -496,7 +496,7 @@ body::before {
 
 .nav-button-logo {
     color: black;
-    text-decoration: black;
+    text-decoration: none;
     font-weight: bold;
     background-color: transparent;
     box-shadow: none;
@@ -742,7 +742,10 @@ body.index-page .nav-primary .nav-button { justify-self: start; }
   display: flex;
   justify-content: space-between;
   margin: 20px;
-  height: 80vh; /* taller containers */
+    gap: 20px;
+    height: auto; /* avoid clipping on small screens */
+    min-height: 60vh;
+    flex-wrap: wrap; /* allow stacking on narrow devices */
 }
 
 /* Side nav containers */
@@ -763,6 +766,15 @@ body.index-page .nav-primary .nav-button { justify-self: start; }
 
 .right-nav {
   margin-left: 10px;
+}
+
+/* Allow scrolling specifically on the leaderboard page */
+body.leaderboard-page { overflow-y: auto; }
+
+@media (max-width: 900px) {
+    .side-nav { width: 100%; }
+    .left-nav { margin-right: 0; }
+    .right-nav { margin-left: 0; }
 }
 
 .lb-side-image {
@@ -881,7 +893,7 @@ body.index-page .nav-primary .nav-button { justify-self: start; }
     padding: 0; /* No padding for logo */
     background: none; /* No background for logo */
     box-shadow: none; /* No shadow for logo */
-    width: 150;
+    width: 150px;
     
     
 }
