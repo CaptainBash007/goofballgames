@@ -50,11 +50,19 @@
         `;
         document.head.appendChild(s);
       }
-      if (!cssLoaded()){
-        let link = getMainLink();
-        if (!link) link = injectMain(); else bust(link);
-        setTimeout(function(){ if (!cssLoaded()) injectFallback(); }, 300);
+      function tryEnsure(){
+        if (!cssLoaded()){
+          let link = getMainLink();
+          if (!link) link = injectMain(); else bust(link);
+          setTimeout(function(){ if (!cssLoaded()) injectFallback(); }, 400);
+        }
+        // After CSS likely applied, ensure Rename UI bindings are present
+        setTimeout(function(){ try { ensureRenameUI(); } catch(e){} }, 450);
       }
+      // Run now, after DOMContentLoaded, and after window load for stubborn caching
+      tryEnsure();
+      document.addEventListener('DOMContentLoaded', tryEnsure, { once: true });
+      window.addEventListener('load', tryEnsure, { once: true });
     }catch(e){ /* ignore CSS ensure errors */ }
   })();
   
