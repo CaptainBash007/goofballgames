@@ -1,0 +1,92 @@
+<!doctype html>
+<link rel="stylesheet" href="styles.css">
+<header id="header">
+    <div class="left-half">
+        <nav>
+            <ul>
+                <a class="nav-button-logo" href="index.html">Goofball Games  <img src="goofballgames.png" alt="Goofball Games Logo" class="logo-img"></a></li>
+                <li><a class="nav-button" href="shop.html">Shop</a></li>
+                <li><a class="nav-button" href="leaderboard.html">Pirate Cash Leaderboard</a></li>
+                <li><a class="nav-button" href="contact.html">Suggestions/Feedback</a></li>
+                <li><a class="nav-button" href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="right-half">
+        <a class="news-box"></a>
+    </div>
+</header>
+
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+        <title>About - Goofball Games</title>
+        <style>
+            /* Blog-like about page styles */
+            .about-container { max-width: 980px; margin: 28px auto; padding: 22px; background: transparent; border-radius: 0; box-shadow: none; }
+            .post { display: block; }
+            .post-section { margin-bottom: 20px; margin-top: 12px; padding: 16px; background: #f8fafc; border-radius: 14px; box-shadow: 0 6px 18px rgba(2,6,23,0.06); }
+            .post-section h2, .post-section h3 { color: #111827; margin-bottom: 8px; }
+            .post-section p { color: #374151; line-height: 1.6; font-size: 16px; margin: 0; }
+            .post-image { width: 100%; border-radius: 10px; display: block; margin: 12px 0 0 0; object-fit: cover; }
+            .post-image--small { max-width: 220px; width: auto; height: auto; display: block; margin: 8px auto 0 auto; }
+            .image-section { padding: 6px 10px 14px 10px; }
+            .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .img-grid .post-image { height: 240px; }
+            .credits { font-size: 13px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 14px; }
+            @media (max-width: 720px) { .img-grid { grid-template-columns: 1fr; } .img-grid .post-image { height: 180px; } }
+            /* Ensure page scrolls normally on small viewports */
+            html, body { min-height: 100%; }
+            /* Override global stylesheet which disables vertical scroll by default */
+            body.about-page { overflow-y: auto !important; height: auto !important; }
+        </style>
+    </head>
+
+    <body class="about-page">
+
+        <div id="floating-text">Powered by <a href="test.html">Puffpaff Shop</a></div>
+
+        <div id="header-placeholder"></div>
+        <script src="header-loader.js"></script>
+
+        <main class="content about-container">
+            <article class="post">
+                <!-- Text section 1 -->
+                <section class="post-section text-section">
+                    <h2>About</h2>
+                    <p>Last year, Goofball games V1 was blocked by the district so it couldn't be edited. We had the idea for V2 for a while, but it wasn't until recently, when puffpaff shop started, we were able to fund it. The code is all ours, so if you want anything to be added or changed, make sure to fill out the feedback form.</p>
+                </section>
+
+                <!-- Image section 1 removed per request -->
+
+                <!-- Text section 2 -->
+                <section class="post-section text-section">
+                    <h3>Why bit.ly/goofballgames?</h3>
+                    <p>If you use that link, you will always redirect to an un-bl0cked version of this site. The site url will change if the current one gets blocked at any time so don't rely on your cookies/local data to save (your favorites or custom stuff will reset)</p>
+                </section>
+
+                <!-- Image section 2 (two-up grid) -->
+                <section class="post-section image-section">
+                    <div class="img-grid">
+                        <img class="post-image" src="https://thumbs.dreamstime.com/z/funny-children-s-portrait-little-girl-close-up-wide-angle-lens-face-deformity-206377284.jpg" alt="Screenshot 1">
+                        <img class="post-image" src="https://thvnext.bing.com/th/id/OIP.OvbVAussb3HUJige4q0VJgHaIV?w=162&h=183&c=7&r=0&o=7&cb=12&pid=1.7&rm=3&ucfimg=1" alt="Screenshot 2">
+                    </div>
+                </section>
+
+                <!-- Credits section -->
+                <footer class="post-section credits">
+                    <p>Credits: Site and shop are made and run by Connor and Ethan </p>
+                </footer>
+            </article>
+        </main>
+
+        <!-- Page will naturally scroll; removed dynamic container height script so content is one long page -->
+        <script src="news-loader.js"></script>
+    </body>
+
+</html>
+
+

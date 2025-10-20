@@ -23,12 +23,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
+                <style>
+                        /* Contact form container styles */
+                        html, body { min-height: 100%; }
+                        body { overflow-y: auto; }
+                        .contact-wrap { max-width: 760px; margin: 28px auto; padding: 18px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; }
+                        .contact-intro { color: #374151; font-size: 15px; line-height: 1.4; margin-bottom: 12px; }
+                        /* Make the contact container scroll if the viewport is small */
+                        .contact-wrap { max-height: calc(100vh - 140px); overflow: auto; }
+                        /* Responsive iframe sizing inside the container */
+                        .contact-iframe { width: 100%; max-width: 640px; height: 720px; max-height: 80vh; border: 0; }
+                        @media (max-height: 700px) {
+                            .contact-iframe { height: 56vh; }
+                        }
+                </style>
     <title>Suggestions/Feedback - Goofball Games</title>
  </head>
 <body>
     
     <center>
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfCLHkQv8kDuKpOLyqjuRyH845Ojiq1ACftPPGP75HIsge8Hw/viewform?embedded=true" width="640" height="856" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        <div class="contact-wrap">
+            <div class="contact-intro">
+                We've spent a lot of time making this and your feedback would help a lot. Please report bugs, make a complaint, suggest something, etc.
+
+                <p style="margin-top:8px;">This is all funded by Puffpaff shop, so thank you to anyone who bought something.</p>
+            </div>
+            <div style="text-align:center;">
+                <iframe class="contact-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSf9L21Wf2sHmQf-gBQjYCwHU86mDNyBDhPAD3aZKwmGgaPfzQ/viewform?usp=header" frameborder="0" marginheight="0" marginwidth="0" title="Contact form">Loading…</iframe>
+            </div>
+        </div>
         </center>
     <script src="news-loader.js"></script>
     <script src="header-loader.js"></script>

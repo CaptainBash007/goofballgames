@@ -1,20 +1,30 @@
 (function(){
-  // Manage favorites using localStorage (cookies would work too; localStorage is simpler)
+  // Manage favorites using localStorage and support dynamically added nav buttons (custom games)
   const STORAGE_KEY = 'gbf_favorites_v1';
   const navBar = document.querySelector('.nav-bar');
   if (!navBar) return;
 
-  // create favorites container at bottom of nav-bar
-  const favoritesContainer = document.createElement('div');
-  favoritesContainer.className = 'favorites-container';
-  const favoritesHeader = document.createElement('div');
-  favoritesHeader.className = 'favorites-header';
-  favoritesHeader.textContent = 'Favorites';
-  favoritesContainer.appendChild(favoritesHeader);
-  const favoritesList = document.createElement('div');
-  favoritesList.className = 'favorites-list';
-  favoritesContainer.appendChild(favoritesList);
-  navBar.appendChild(favoritesContainer);
+  // ensure favorites container exists
+  let favoritesContainer = navBar.querySelector('.favorites-container');
+  if (!favoritesContainer) {
+    favoritesContainer = document.createElement('div');
+    favoritesContainer.className = 'favorites-container';
+    const header = document.createElement('div');
+    header.className = 'favorites-header';
+    header.textContent = 'Favorites';
+    favoritesContainer.appendChild(header);
+    const list = document.createElement('div');
+    list.className = 'favorites-list';
+    favoritesContainer.appendChild(list);
+    navBar.appendChild(favoritesContainer);
+  }
+
+  const favoritesList = favoritesContainer.querySelector('.favorites-list');
+
+  function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; } }
+  function save(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+  let favorites = load();
 
   function getPrimaryButtons(){
     return Array.from(navBar.querySelectorAll('.nav-button')).filter(el=>
@@ -22,103 +32,107 @@
     );
   }
 
-  function load() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; }
-  }
-  function save(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
-
-  let favorites = load();
-
-  function idForBtn(btn, i){
-    // create an id based on href + index fallback
-    return btn.getAttribute('href') || btn.textContent.trim().slice(0,30) + '::' + i;
+  function idForBtn(btn){
+    // Prefer stable identifiers:
+    // 1) href (if present)
+    // 2) data-custom-game-id (used for custom games)
+    // 3) fallback to trimmed text
+    return btn.getAttribute('href') || btn.dataset.customGameId || btn.textContent.trim().slice(0,30);
   }
 
-  function ensureStar(btn){
-    if (!btn || btn.classList.contains('add-game-btn')) return;
-    if (btn.querySelector('.fav-star')) return; // already has star
-    const i = 0; // index not needed when href exists
+  function updateStarText(star){ star.textContent = star.classList.contains('active') ? '\u2605' : '\u2606'; }
+
+  function attachStarToButton(btn){
+    if (btn.querySelector('.fav-star')) return; // already attached
     btn.style.position = btn.style.position || 'relative';
     const star = document.createElement('button');
     star.className = 'fav-star';
     star.setAttribute('aria-label','Toggle favorite');
-    const id = idForBtn(btn,i);
+    const id = idForBtn(btn);
     star.dataset.id = id;
     if (favorites.includes(id)) star.classList.add('active');
-    function updateStarText(){ star.textContent = star.classList.contains('active') ? '★' : '☆'; }
-    updateStarText();
+    updateStarText(star);
     btn.appendChild(star);
+
     star.addEventListener('click', function(e){
       e.stopPropagation(); e.preventDefault();
-      const fid = this.dataset.id;
-      if (favorites.includes(fid)) {
-        favorites = favorites.filter(x=>x!==fid);
+      const id = this.dataset.id;
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(x=>x!==id);
         this.classList.remove('active');
       } else {
-        favorites.push(fid);
+        favorites.push(id);
         this.classList.add('active');
       }
-      updateStarText();
+      updateStarText(this);
       save(favorites);
       renderFavorites();
     });
   }
 
-  // add stars to current buttons
-  getPrimaryButtons().forEach(btn=> ensureStar(btn));
+  // Attach stars to existing primary buttons
+  getPrimaryButtons().forEach(attachStarToButton);
 
-  // Observe future buttons (e.g., custom games) and add stars automatically
-  const primary = document.querySelector('.nav-bar .nav-primary') || navBar;
-  if (primary && 'MutationObserver' in window){
-    const mo = new MutationObserver((mut)=>{
-      mut.forEach(m=>{
-        m.addedNodes && m.addedNodes.forEach(n=>{
-          if (n.nodeType===1){
-            if (n.classList.contains('nav-button')) ensureStar(n);
-            // if container node, scan descendants
-            n.querySelectorAll && n.querySelectorAll('.nav-button').forEach(ensureStar);
-          }
+  // Observe nav for dynamically added buttons (custom games)
+  const primaryWrap = navBar.querySelector('.nav-primary') || navBar;
+  const mo = new MutationObserver(mutations => {
+    for (const m of mutations){
+      if (m.type === 'childList' && m.addedNodes.length){
+        m.addedNodes.forEach(n => {
+          if (!(n instanceof HTMLElement)) return;
+          if (n.classList && n.classList.contains('nav-button')) attachStarToButton(n);
+          n.querySelectorAll && n.querySelectorAll('.nav-button').forEach(attachStarToButton);
         });
-      });
-    });
-    mo.observe(primary, { childList: true, subtree: true });
-  }
+      }
+    }
+  });
+  mo.observe(primaryWrap, { childList: true, subtree: true });
 
   function renderFavorites(){
+    // reload latest favorites from storage in case another code path modified it
+    favorites = load();
     favoritesList.innerHTML = '';
-    // for each favorite id, find the corresponding primary button
-    const buttonsNow = getPrimaryButtons();
+    const primaryButtons = getPrimaryButtons();
+    // Keep only valid favorites (that map to a primary button)
+    const valid = [];
     favorites.forEach(fid=>{
-      const src = buttonsNow.find((btn,i)=> idForBtn(btn,i) === fid);
-      if (!src) return; // ignore stale ids
-      const clone = src.cloneNode(true);
-      // remove nested fav star in clone
-      const nested = clone.querySelector('.fav-star'); if (nested) nested.remove();
-      // strip any hover-extra content or vote controls so favorites stay clean
-      clone.querySelectorAll('.nav-extra, .vote-controls, .vote-btn, .icon, .count').forEach(n => n.remove());
+      const src = primaryButtons.find(btn => idForBtn(btn) === fid || btn.href === fid || (fid && fid.endsWith(btn.getAttribute('href')||'')));
+      if (!src) return; // skip stale
+      valid.push(fid);
+  const clone = src.cloneNode(true);
+  // remove nested favorite controls and any remove buttons so favorites are read-only
+  const nested = clone.querySelector('.fav-star'); if (nested) nested.remove();
+  clone.querySelectorAll('.remove-custom-game, .nav-extra, .vote-controls, .vote-btn, .icon, .count').forEach(n => n.remove());
       clone.classList.add('favorite-item');
-      // ensure clicking clone navigates
-      clone.addEventListener('click', function(e){
-        const href = clone.getAttribute('href'); if (href) location.href = href;
-      });
+      clone.addEventListener('click', function(e){ const href = clone.getAttribute('href'); if (href) location.href = href; });
       favoritesList.appendChild(clone);
     });
+    // Persist cleaned favorites if we removed stale entries
+    if (JSON.stringify(valid) !== JSON.stringify(favorites)) {
+      favorites = valid; save(favorites);
+    }
+
+    // If there are no favorites, show a subtle placeholder hint
+    if (!valid.length) {
+      const hint = document.createElement('div');
+      hint.className = 'favorites-empty-hint';
+      hint.textContent = 'Click on a star to favorite something';
+      // minimal inline styles so it looks subtle without requiring CSS changes
+      hint.style.background = '#e5e7eb';
+      hint.style.color = '#6b7280';
+      hint.style.padding = '8px 10px';
+      hint.style.borderRadius = '6px';
+      hint.style.fontSize = '13px';
+      hint.style.textAlign = 'center';
+      hint.style.margin = '6px';
+      favoritesList.appendChild(hint);
+    }
   }
 
-  // initial render
-  renderFavorites();
+  // Respond to external updates: other scripts can dispatch this event after changing favorites
+  document.addEventListener('favorites-changed', renderFavorites);
 
-  // Allow external triggers to remove/refresh favorites (used by custom-game removal)
-  window.addEventListener('gb:favorites:remove', (e)=>{
-    const id = e && e.detail && e.detail.id; if (!id) return;
-    favorites = favorites.filter(x=>x!==id);
-    save(favorites);
-    renderFavorites();
-    // Also unmark star if the button still exists
-    const btn = getPrimaryButtons().find((b,i)=> idForBtn(b,i) === id);
-    const star = btn && btn.querySelector && btn.querySelector('.fav-star');
-    if (star) { star.classList.remove('active'); star.textContent = '☆'; }
-  });
-  window.addEventListener('gb:favorites:refresh', ()=> renderFavorites());
+  // Initial render
+  renderFavorites();
 
 })();
