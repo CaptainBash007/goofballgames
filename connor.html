@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CBox Chat - Goofball Games</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* Make sure the iframe fills the page */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+      /* Page-level reset used only on this page */
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      /* Centered, responsive iframe container for the CBox chat */
+      .connor-iframe-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px; /* spacing from header and page edges */
+        box-sizing: border-box;
+        width: 100%;
+        /* leave room for header and controls; the wrapper will grow/shrink with the viewport */
+        min-height: calc(100vh - 120px);
+      }
+
+      /* The iframe itself: constrain max width and preserve aspect ratio */
+      .connor-iframe-wrapper .responsive-iframe {
+        width: min(100%, 1000px); /* never wider than 1000px, but shrink to fit */
+        max-width: 100%;
+        aspect-ratio: 16/9; /* keeps chat visually balanced */
+        height: auto;
+        border: none;
+        display: block;
+      }
+
+      /* Force override for other site-wide iframe rules that use !important */
+      .connor-iframe-wrapper .responsive-iframe {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+        aspect-ratio: 16/9 !important;
+      }
+
+      /* Smaller screens: reduce padding and allow a squarer ratio */
+      @media (max-width: 480px) {
+        .connor-iframe-wrapper { padding: 12px; }
+        .connor-iframe-wrapper .responsive-iframe { aspect-ratio: 4/3 !important; }
+      }
+
+      /* Bubble-specific styles */
+      .connor-bubble-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: calc(100vh - 160px);
+        box-sizing: border-box;
+        padding: 24px;
+      }
+
+      .connor-bubble {
+        width: min(92%, 840px); /* medium bubble: up to 840px */
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        border-radius: 20px;
+        padding: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.04);
+        backdrop-filter: blur(6px);
+      }
+
+      .connor-bubble iframe {
+        display: block;
+        width: 100% !important;
+        height: 480px; /* give the chat a comfortable height inside the bubble */
+        border-radius: 12px;
+        border: none;
+      }
+
+      @media (max-width: 600px) {
+        .connor-bubble { width: min(98%, 520px); padding: 8px; }
+        .connor-bubble iframe { height: 380px; }
+      }
+
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div class="left-half">
+        <nav>
+            <ul>
+                 
+                <a class="nav-button-logo" href="index.html">Goofball Games  <img src="goofballgames.png" alt="Goofball Games Logo" class="logo-img"></a></li>
+                <li><a class="nav-button" href="shop.html">Shop</a></li>
+                <li><a class="nav-button" href="leaderboard.html">Pirate Cash Leaderboard</a></li>
+                <li><a class="nav-button" href="contact.html">Suggestions/Feedback</a></li>
+                <li><a class="nav-button" href="about.html">About</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+  <div class="right-half">
+    <a class="news-box" >
+    </a>
+  </div>
+</header>
+
+  <!-- Centered bubble container with iframe inside -->
+  <div class="connor-bubble-wrapper">
+    <div class="connor-bubble">
+      <iframe id="connor-iframe" src="https://www3.cbox.ws/box/?boxid=3549747&boxtag=s2CFNP" width="100%" height="450" allowtransparency="yes" allow="autoplay; fullscreen" allowfullscreen loading="lazy" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" title="CBox Chat - Goofball Games"></iframe>
+    </div>
+  </div>
+
+  <button id="fullscreen-btn" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+  <script src="fullscreen.js"></script>
+  <script src="header-loader.js"></script>
+  <script src="news-loader.js"></script>
+  <div id="floating-text">
+  <a href="shop.html">Funded by Puffpaff Shop</a>
+</div>
+</body>
+</html>
