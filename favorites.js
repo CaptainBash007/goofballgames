@@ -16,8 +16,10 @@
   favoritesContainer.appendChild(favoritesList);
   navBar.appendChild(favoritesContainer);
 
-  // find primary buttons inside nav-bar (exclude favorites container)
-  const primaryButtons = Array.from(navBar.querySelectorAll('.nav-button')).filter(el=>!el.closest('.favorites-container'));
+  // find primary buttons inside nav-bar (exclude favorites container and the "Add your own game" button)
+  const primaryButtons = Array.from(navBar.querySelectorAll('.nav-button')).filter(el=>
+    !el.closest('.favorites-container') && !el.classList.contains('add-game-btn')
+  );
 
   function load() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; }
