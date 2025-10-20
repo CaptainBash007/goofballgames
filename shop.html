@@ -546,7 +546,6 @@
 </head>
 <body>
     <div id="header-placeholder"></div>
-    <div class="news-box"></div>
     <script src="header-loader.js"></script>
     <script src="news-loader.js"></script>
     <div class="container">
@@ -580,9 +579,8 @@
             <aside class="sidebar">
                 <div class="sidebar-inner">
                     <h2>News & Updates</h2>
-                    <div class="glass-box" role="region" aria-label="News and updates">
-                        <h3 style="margin-top:0; margin-bottom:6px;">No News Yet</h3>
-                        <p style="margin:0; font-size:0.95em; color:inherit; opacity:0.9;">Use this space to add short announcements, release notes, or coupons. This glass panel uses a subtle blur so it stands out while matching the page background.</p>
+                    <div class="glass-box news-box" role="region" aria-label="News and updates" style="min-height: 60px;">
+                        <!-- News content injected by news-loader.js from news.txt -->
                     </div>
                     <!-- Feedback toggle moved into sidebar -->
                     <div style="margin-top:14px;">
