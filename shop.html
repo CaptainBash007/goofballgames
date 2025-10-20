@@ -1,19 +1,774 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Shop - Goofball Games</title>
-	<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Goofball Games</title>
+    <link rel="icon" type="image/png" href="https://didyougetherefromthebitlylink.neocities.org/goofballgames.png">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @font-face {
+            font-family: 'Mojangles';
+            src: url('Mojangles.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .particle {
+            pointer-events: none;
+            position: fixed;
+            background: #007bff;
+            border-radius: 50%;
+            width: 6px;
+            height: 6px;
+            animation: explode 0.8s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png');
+            background-position: 
+                0 0,
+                60px 30px,
+                30px 60px;
+            background-size: 120px 120px;
+            background-repeat: repeat;
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: -1;
+            filter: grayscale(60%) brightness(160%);
+        }
+        
+        html, body {
+            overflow-x: hidden;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #181a1b;
+            color: #e0e0e0;
+        }
+        body.dark-mode .container {
+            background-color: #23272a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        body.dark-mode .site-title {
+            color: #f5f5f5;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.4), 5px 5px 20px rgba(0,0,0,0.5);
+        }
+        body.dark-mode .alert-inline {
+            background: #b71c1c;
+            color: #fff;
+        }
+        body.dark-mode .main-buttons .button,
+        body.dark-mode .button {
+            background: linear-gradient(180deg, #3a3a3a 0%, #23272a 100%);
+            color: #fff;
+            box-shadow: 0 8px 0 #111, 0 10px 15px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.08), inset 0 -2px 0 rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.7);
+        }
+        body.dark-mode .button:hover {
+            background: linear-gradient(180deg, #444 0%, #2c2f34 100%);
+        }
+        body.dark-mode .button:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 #111, 0 6px 10px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3);
+        }
+        body.dark-mode .feedback-button {
+            background: #23272a;
+            color: #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        /* Ensure embed content in the feedback toggle respects dark mode */
+        body.dark-mode .feedback-button .embed {
+            color: #e0e0e0;
+            background: transparent;
+        }
+        body.dark-mode .feedback-button .embed div {
+            color: inherit !important;
+        }
+        body.dark-mode #countdownTimer {
+            background: rgba(30,30,30,0.7);
+            color: #fff;
+        }
+        body.dark-mode a { color: #90caf9; }
+        body.dark-mode .explain-toggle .label { color: #90caf9; }
+        body.dark-mode .explain-toggle .full { background: #23272a; color: #e0e0e0; }
+    /* removed stray closing brace that broke CSS */
+        /* During theme switch, avoid animating button border (box-shadow) */
+        body.theme-switch .button {
+            transition: transform 0.1s, background 0.3s;
+        }
+        .site-title {
+            text-align: center;
+            color: #222;
+            margin-bottom: 16px;
+            font-size: 4em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 
+                3px 3px 0 rgba(0,0,0,0.1),
+                5px 5px 20px rgba(0,0,0,0.15);
+            line-height: 1.2;
+        }
+        .title-image {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 300px;
+            height: auto;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .title-image:hover {
+            transform: scale(1.05);
+        }
+        .container {
+            background-color: white;
+            padding: 30px 30px 0 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+                max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        /* Fullscreen embed wrapper styles */
+        .embed-wrapper { background: transparent; }
+        .embed-fullscreen-btn {
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.05em;
+            line-height: 1;
+            transition: background 0.12s, transform 0.08s;
+            z-index: 99999; /* ensure it sits above the iframe */
+            position: absolute; /* keep position context inside wrapper */
+        }
+        .embed-fullscreen-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(0,0,0,0.25); }
+        .embed-fullscreen-btn:hover { background: rgba(0,0,0,0.75); transform: translateY(-1px); }
+        body.dark-mode .embed-fullscreen-btn { background: rgba(255,255,255,0.08); color: #fff; }
+        /* When the wrapper itself enters fullscreen, ensure the iframe fills it */
+        :fullscreen .embed-wrapper iframe,
+        :-webkit-full-screen .embed-wrapper iframe,
+        :-moz-full-screen .embed-wrapper iframe {
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1 !important; /* keep iframe below the button */
+        }
+        :fullscreen .embed-wrapper .embed-fullscreen-btn,
+        :-webkit-full-screen .embed-wrapper .embed-fullscreen-btn,
+        :-moz-full-screen .embed-wrapper .embed-fullscreen-btn {
+            z-index: 100000 !important; /* ensure button is highest */
+        }
+        /* Glass-style box for News & Updates */
+        .glass-box {
+            position: relative;
+            /* keep the box itself transparent so the pseudo-element exactly matches the page pattern */
+            background-color: transparent;
+            backdrop-filter: blur(8px) saturate(1.05);
+            -webkit-backdrop-filter: blur(8px) saturate(1.05);
+            border-radius: 10px;
+            padding: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            color: #222;
+            overflow: hidden;
+        }
+        /* use a pseudo-element to render the patterned icons behind the glass content
+           using fixed attachment so patterns align with the page's background. The
+           pseudo-element can be filtered/opacity adjusted without affecting text. */
+        .glass-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png'),
+                url('https://didyougetherefromthebitlylink.neocities.org/goofballgames.png');
+            background-position: 0 0, 60px 30px, 30px 60px;
+            background-size: 120px 120px;
+            background-repeat: repeat;
+            background-attachment: fixed; /* align with the page pattern */
+            /* match body::before opacity and filter so the icons look identical */
+            opacity: 0.025;
+            filter: grayscale(60%) brightness(160%);
+        }
+        .glass-box > * { position: relative; z-index: 1; }
+        /* Shop announcements styling */
+        .shop-announcements { margin-top: 12px; }
+        .announcement-list { display: flex; flex-direction: column; gap: 12px; }
+        .item-card { display: flex; gap: 10px; background: rgba(255,255,255,0.85); border-radius: 8px; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; }
+        .item-photo img { width: 120px; height: auto; border-radius: 6px; display: block; }
+        .item-body { display: flex; flex-direction: column; gap: 6px; }
+        .item-name { font-weight: 700; font-size: 1em; }
+        .item-prices { font-size: 0.9em; color: #444; }
+        .item-colors { font-size: 0.85em; color: #666; }
+        @media (max-width: 600px) {
+            .item-card { flex-direction: column; align-items: stretch; }
+            .item-photo img { width: 100%; height: auto; }
+        }
+        body.dark-mode .item-card { background: rgba(30,30,30,0.5); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+        /* Dark mode adjustments */
+        body.dark-mode .glass-box {
+            background: rgba(20,20,22,0.45);
+            color: #e6e6e6;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .about-section {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .alert-inline {
+            font-weight: bold;
+            background: #d32f2f;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: block;
+            width: fit-content;
+            margin: 0 auto 32px;
+            text-align: center;
+        }
+        /* expandable explanation (morphing toggle) */
+        .explain-toggle {
+            /* Give equal breathing room above and below */
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+        /* Space between the buttons/blocked toggle group and the explain section */
+        .button-container { margin-bottom: 20px; }
+        .explain-toggle:focus { outline: none; }
+        .explain-toggle .label,
+        .explain-toggle .full {
+            display: inline-block;
+            transition: opacity 0.28s ease, transform 0.28s ease;
+            vertical-align: middle;
+        }
+        .explain-toggle .label {
+            font-weight: 600;
+            text-decoration: underline;
+            color: inherit;
+            position: relative;
+            padding: 0 16px;
+        }
+        /* Hover/focus arrow indicator for expandable toggles */
+        .explain-toggle .label::after,
+        .feedback-toggle .label::after {
+            content: '▾';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+            pointer-events: none;
+        }
+        .explain-toggle:hover .label::after,
+        .explain-toggle:focus-visible .label::after,
+        .feedback-toggle:hover .label::after,
+        .feedback-toggle:focus-visible .label::after {
+            opacity: 0.9;
+            transform: translateY(-50%);
+        }
+        /* Keep indicator visible when open; rotate to suggest collapse */
+        .explain-toggle.open .label::after,
+        .feedback-toggle.open .label::after {
+            opacity: 0.9;
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .explain-toggle .full {
+            opacity: 0;
+            transform: translateY(8px);
+            max-width: 520px;
+            text-align: center;
+            display: block;
+            max-height: 0;
+            overflow: hidden;
+            overflow-y: hidden;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            transition: max-height 0.32s ease, opacity 0.28s ease, transform 0.28s ease;
+        }
+        .explain-toggle .full::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .explain-toggle.open .label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .explain-toggle.open .full {
+            opacity: 1;
+            transform: translateY(0);
+            /* when open, max-height is set by JS to the scrollHeight for smooth, content-sized expansion */
+        }
+        /* Modern flat button styles */
+        .main-buttons {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .main-buttons .button {
+            flex: 1 1 0;
+            min-width: 220px;
+            max-width: 100%;
+            height: 100px;
+            /* Ensure text is centered vertically */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px 48px;
+            margin: 10px;
+            color: #444;
+            text-decoration: none;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #f6f7f9 0%, #e9edf2 100%);
+            box-shadow:
+                0 8px 0 #d1d7df,
+                0 10px 15px rgba(0,0,0,0.12),
+                inset 0 2px 0 rgba(255,255,255,0.85),
+                inset 0 -2px 0 rgba(0,0,0,0.06);
+            transition: transform 0.1s, box-shadow 0.1s, background 0.3s;
+            font-size: 2em;
+            font-weight: 700;
+            border: none;
+            text-shadow: none;
+            position: relative;
+            cursor: pointer;
+        }
+        /* Remove .button-inner and move transform to .button:active */
+        .button:hover {
+            background: linear-gradient(180deg, #eef1f5 0%, #e2e7ee 100%);
+            box-shadow:
+                0 8px 0 #c8ced6,
+                0 12px 20px rgba(0,0,0,0.16),
+                inset 0 2px 0 rgba(255,255,255,0.9),
+                inset 0 -2px 0 rgba(0,0,0,0.08);
+        }
+        .button:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 4px 0 #d1d7df,
+                0 6px 10px rgba(0,0,0,0.12),
+                inset 0 2px 0 rgba(255,255,255,0.85),
+                inset 0 -1px 0 rgba(0,0,0,0.06);
+        }
+        .feedback-button {
+            font-size: 0.8em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #e0e3e7;
+            color: #444;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            margin-top: 16px;
+            display: inline-flex; /* allow it to size to its content */
+            flex-direction: column;
+            align-items: center;
+            border: none;
+            opacity: 0.85;
+            transition: opacity 0.32s cubic-bezier(.2,.9,.2,1);
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            /* remove hard min-width so toggle can shrink to label width */
+            min-width: 0;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        .feedback-button .embed {
+            display: none;
+            width: 100%; /* fluid within the toggle container */
+            max-width: 720px; /* don't exceed this so it fits nicely */
+            max-height: 0;
+            min-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.32s cubic-bezier(.2,.9,.2,1), opacity 0.32s;
+            box-sizing: border-box;
+        }
+        .feedback-button .embed iframe {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        .feedback-button .embed iframe::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        /* Light mode default text color inside the embed */
+        .feedback-button .embed { color: #333; }
+        .feedback-button.open {
+            padding: 12px 16px 16px 16px;
+        }
+        .feedback-button.open .embed {
+            display: block;
+            max-height: 850px;
+            min-height: 220px;
+            opacity: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .feedback-button .label {
+            display: inline-block;
+            width: auto;
+            text-align: center;
+            margin-bottom: 0;
+            font-weight: 600;
+            transition: margin-bottom 0.32s cubic-bezier(.2,.9,.2,1);
+            position: relative;
+            padding: 0 16px;
+        }
+        .feedback-button.open .label {
+            margin-bottom: 12px;
+        }
+        /* Brown square home button above the title */
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 140px;
+            height: 56px;
+            padding: 0 14px;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #8b5e3c 0%, #5c3b26 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.12), 0 10px 20px rgba(0,0,0,0.12), inset 0 2px 0 rgba(255,255,255,0.06);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+        }
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 0 rgba(0,0,0,0.12), 0 14px 28px rgba(0,0,0,0.14);
+        }
+        .home-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 rgba(0,0,0,0.12), 0 6px 12px rgba(0,0,0,0.12);
+        }
+        .home-button:focus {
+            outline: none;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.12), 0 10px 20px rgba(0,0,0,0.18), 0 0 0 4px rgba(139,94,60,0.12);
+        }
+        @media (max-width:420px){
+            .home-button{ min-width:120px; font-size:0.95em; height:48px; }
+        }
+        /* Ensure the Goofball Games button text stays white in dark mode */
+        body.dark-mode .home-button { color: #fff !important; }
+        /* .feedback-button.open .label { opacity: 0; } -- removed so label always visible */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Two-column layout: main content left, sidebar right (visible and responsive) */
+        .content {
+            display: grid;
+            /* Make main responsive and sidebar flexible: main grows, sidebar constrained between 260px and 720px */
+            grid-template-columns: minmax(320px, 1fr) minmax(260px, 720px);
+            gap: 28px;
+            align-items: start;
+        }
+            .sidebar {
+            width: auto;
+            min-width: 180px;
+            max-width: 720px; /* increased max width */
+            overflow: auto; /* scroll if sidebar content is tall */
+        }
+        .sidebar-inner { padding: 12px; border-radius: 8px; }
+    /* Make sidebar iframes fluid so they don't force sidebar width */
+    .sidebar .embed iframe, .sidebar iframe { width: 100% !important; box-sizing: border-box; }
+    /* Ensure feedback toggle fills the sidebar and the embed uses the full available width */
+    .sidebar .feedback-button { display: block !important; width: 100% !important; box-sizing: border-box; }
+        @media (max-width: 1100px) {
+            .content { grid-template-columns: 1fr; }
+            .main { width: 100%; }
+            .sidebar { width: 100%; max-width: none; }
+        }
+    </style>
 </head>
 <body>
-	<div id="header-placeholder"></div>
-	<script src="header-loader.js"></script>
-	<script src="news-loader.js"></script>
+    <div id="header-placeholder"></div>
+    <div class="news-box"></div>
+    <script src="header-loader.js"></script>
+    <script src="news-loader.js"></script>
+    <div class="container">
+        <div class="content">
+            <main class="main">
+                <!-- Brown square gradient button linking to index.html -->
+                <div style="text-align:center; margin-bottom:12px;">
+                    <a href="index.html" class="home-button" aria-label="Goofball Games" title="Goofball Games">Goofball Games</a>
+                </div>
 
-	<main class="content">
-		<h1>Shop</h1>
-		<p>Coming soon.</p>
-	</main>
+                <h1 class="site-title" id="siteTitle" role="button" tabindex="0" aria-pressed="false" title="Toggle theme">PUFFPAFF SHOP</h1>
+
+                <div class="about-section" style="text-align:center; margin-bottom:18px;">
+                    <p style="max-width:720px; margin:0 auto 12px;">This page is in beta. Right now, it just shows the available items and their prices. If you want to make an order, talk to Connor in person.</p>
+                    <p style="font-size:0.9em; color:#666; margin:6px 0 0;">Prints get made on an order to order basis - it may take up to a week or more depending on complexity</p>
+                </div>
+
+                <!-- Embedded Google Doc (responsive) with fullscreen control -->
+                <div style="max-width:100%; margin: 0 auto 18px;">
+                    <div id="docWrapper" class="embed-wrapper" style="position:relative; width:100%; min-height:600px; max-height:1200px; overflow:hidden; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+                        <iframe id="docFrame" src="https://docs.google.com/document/d/1WLBQ8bebRgoIsckrhbVRJbSqkmAObW37-b6yEbtCggo/preview" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <button id="docFullscreenBtn" class="embed-fullscreen-btn" aria-label="Toggle document fullscreen" aria-pressed="false" title="Toggle fullscreen" style="position:absolute; right:10px; bottom:10px; z-index:20; background:rgba(0,0,0,0.6); color:#fff; border:none; padding:8px 10px; border-radius:6px; cursor:pointer;">⤢</button>
+                    </div>
+                </div>
+
+                <!-- Suggestions & Feedback moved to sidebar -->
+
+                <div style="text-align: center; font-size: 0.8em; color: #999; padding: 12px 0; margin-top: 2px;"><a href="https://www.youtube.com/@PuffpaffShop" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">Made by Connor and Ethan</a></div>
+            </main>
+
+            <aside class="sidebar">
+                <div class="sidebar-inner">
+                    <h2>News & Updates</h2>
+                    <div class="glass-box" role="region" aria-label="News and updates">
+                        <h3 style="margin-top:0; margin-bottom:6px;">No News Yet</h3>
+                        <p style="margin:0; font-size:0.95em; color:inherit; opacity:0.9;">Use this space to add short announcements, release notes, or coupons. This glass panel uses a subtle blur so it stands out while matching the page background.</p>
+                    </div>
+                    <!-- Feedback toggle moved into sidebar -->
+                    <div style="margin-top:14px;">
+                        <!-- Make the toggle full-width inside the sidebar so the feedback form is readable -->
+                        <div class="feedback-toggle feedback-button" id="suggestToggle" tabindex="0" role="button" aria-expanded="false" style="cursor:pointer; display:block; width:100%;">
+                            <span class="label">Suggestions and Feedback?</span>
+                            <div class="embed" aria-hidden="true" style="display:none; width:100%; max-width:100%; margin:12px 0 0; box-sizing:border-box;">
+                                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe6kAUk1QSXo-KNehrqH8Ki-9RCMJtirQ52Bs0U4oJ4KsJ7hw/viewform?embedded=true" width="640" height="800" frameborder="0" style="width:100%;min-height:420px;border-radius:8px;box-sizing:border-box;" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Announcements: editable JSON data below; edit the JSON block to add/remove items -->
+                    <div class="shop-announcements" style="margin-top:18px;">
+                        <h3 style="margin:6px 0 8px;">Latest Items</h3>
+                        <div class="announcement-list" id="announcementList"></div>
+
+                        <!-- Template used by the renderer (do not edit) -->
+                        <template id="itemTemplate">
+                            <div class="item-card">
+                                <div class="item-photo"><img src="" alt="item photo"></div>
+                                <div class="item-body">
+                                    <div class="item-name"></div>
+                                    <div class="item-prices"><span class="price-pb"></span> <span class="price-usd"></span></div>
+                                    <div class="item-colors"></div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Editable data: modify this JSON to add/remove/update items. Fields: name, pb, usd, colors (array), img -->
+                        <script type="application/json" id="announcementsData">
+                        [
+                            {
+                                "name": "Example Plush",
+                                "pb": 50,
+                                "usd": 5.00,
+                                "colors": ["Red","Blue","Green"],
+                                "img": "https://didyougetherefromthebitlylink.neocities.org/goofballgames.png"
+                            },
+                            {
+                                "name": "Sticker Pack",
+                                "pb": 10,
+                                "usd": 1.00,
+                                "colors": ["Multicolor"],
+                                "img": "https://didyougetherefromthebitlylink.neocities.org/goofballgames.png"
+                            },
+                            {
+                                "name": "Custom Keychain",
+                                "pb": 25,
+                                "usd": 2.50,
+                                "colors": ["Silver","Gold"],
+                                "img": "https://didyougetherefromthebitlylink.neocities.org/goofballgames.png"
+                            }
+                        ]
+                        </script>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+    <script>
+        // Dark mode toggle on site title (click or keyboard). Preserves preference in localStorage.
+        (function(){
+            const title = document.getElementById('siteTitle');
+            if (!title) return;
+            title.style.cursor = 'pointer';
+            function setAria(){
+                const pressed = document.body.classList.contains('dark-mode');
+                title.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+            }
+            function toggleTheme(){
+                document.body.classList.add('theme-switch');
+                document.body.classList.toggle('dark-mode');
+                if (window.localStorage) {
+                    if (document.body.classList.contains('dark-mode')) {
+                        localStorage.setItem('goofball-dark', '1');
+                    } else {
+                        localStorage.removeItem('goofball-dark');
+                    }
+                }
+                setAria();
+                setTimeout(() => document.body.classList.remove('theme-switch'), 350);
+            }
+            title.addEventListener('click', toggleTheme);
+            title.addEventListener('keydown', (e)=>{
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleTheme();
+                }
+            });
+            if (window.localStorage && localStorage.getItem('goofball-dark')) {
+                document.body.classList.add('dark-mode');
+            }
+            setAria();
+        })();
+    </script>
+    <script>
+        // Fullscreen toggle for the Google Doc embed
+        (function(){
+            const btn = document.getElementById('docFullscreenBtn');
+            const wrapper = document.getElementById('docWrapper');
+            const iframe = document.getElementById('docFrame');
+            if (!btn || !wrapper || !iframe) return;
+            // Request fullscreen on the wrapper and ensure iframe fills it
+            function enterFullscreen(){
+                if (wrapper.requestFullscreen) return wrapper.requestFullscreen();
+                if (wrapper.webkitRequestFullscreen) return wrapper.webkitRequestFullscreen();
+                if (wrapper.mozRequestFullScreen) return wrapper.mozRequestFullScreen();
+            }
+            function exitFullscreen(){
+                if (document.exitFullscreen) return document.exitFullscreen();
+                if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+                if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+            }
+            function isFullscreen(){
+                return document.fullscreenElement === wrapper || document.webkitFullscreenElement === wrapper || document.mozFullScreenElement === wrapper;
+            }
+            function toggle(){
+                if (isFullscreen()) { exitFullscreen(); btn.setAttribute('aria-pressed','false'); }
+                else { enterFullscreen(); btn.setAttribute('aria-pressed','true'); }
+            }
+            btn.addEventListener('click', toggle);
+            btn.addEventListener('keydown', (e)=>{ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+            // If user exits with ESC, update the button state
+            document.addEventListener('fullscreenchange', ()=>{ if (!isFullscreen()) btn.setAttribute('aria-pressed','false'); });
+            document.addEventListener('webkitfullscreenchange', ()=>{ if (!isFullscreen()) btn.setAttribute('aria-pressed','false'); });
+            document.addEventListener('mozfullscreenchange', ()=>{ if (!isFullscreen()) btn.setAttribute('aria-pressed','false'); });
+        })();
+    </script>
+    <script>
+        // Renderer for shop announcements from embedded JSON data
+        (function(){
+            const dataScript = document.getElementById('announcementsData');
+            const list = document.getElementById('announcementList');
+            const tpl = document.getElementById('itemTemplate');
+            if (!dataScript || !list || !tpl) return;
+            let items = [];
+            try { items = JSON.parse(dataScript.textContent); } catch(e){ console.error('Invalid announcements JSON', e); }
+            function fmtUSD(n){ return '(≈ $' + Number(n).toFixed(2) + ' USD)'; }
+            items.forEach(it => {
+                const node = tpl.content.cloneNode(true);
+                const img = node.querySelector('.item-photo img');
+                const name = node.querySelector('.item-name');
+                const pb = node.querySelector('.price-pb');
+                const usd = node.querySelector('.price-usd');
+                const colors = node.querySelector('.item-colors');
+                img.src = it.img || 'https://via.placeholder.com/320x200.png?text=No+Image';
+                img.alt = it.name || 'Item photo';
+                name.textContent = it.name || 'Unnamed Item';
+                pb.textContent = 'Price: ' + (it.pb !== undefined ? it.pb + ' PB' : '—');
+                usd.textContent = it.usd !== undefined ? fmtUSD(it.usd) : '';
+                colors.textContent = 'Colors: ' + (Array.isArray(it.colors) ? it.colors.join(', ') : (it.colors || '—'));
+                list.appendChild(node);
+            });
+        })();
+    </script>
+        <script>
+            // (Removed shortlink copy tooltip and other interactive bits to simplify page)
+        </script>
+        <script>
+            (function(){
+                const toggle = document.getElementById('suggestToggle');
+                if (!toggle) return;
+                const embed = toggle.querySelector('.embed');
+                function setOpen(open){
+                    toggle.classList.toggle('open', open);
+                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    if (open) {
+                        embed.style.display = 'block';
+                        embed.setAttribute('aria-hidden','false');
+                        setTimeout(()=>{ embed.style.maxHeight = embed.scrollHeight + 'px'; embed.style.opacity = '1'; }, 10);
+                    } else {
+                        embed.style.maxHeight = '0px';
+                        embed.style.opacity = '0';
+                        embed.setAttribute('aria-hidden','true');
+                        setTimeout(()=>{ embed.style.display='none'; }, 320);
+                    }
+                }
+                toggle.addEventListener('click', ()=> setOpen(!toggle.classList.contains('open')));
+                toggle.addEventListener('keydown', (e)=>{
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setOpen(!toggle.classList.contains('open'));
+                    }
+                });
+            })();
+        </script>
+    <!-- removed legacy feedbackToggle script (unused) -->
 </body>
 </html>
