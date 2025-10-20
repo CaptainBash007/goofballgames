@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goofball Games</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* Make sure the embed fills the page */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      height: calc(100% - 80px); /* adjust 80px to match your header height */
+      border: none;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div class="left-half">
+        <nav>
+            <ul>
+                 
+                <a class="nav-button-logo" href="index.html">Goofball Games  <img src="goofballgames.png" alt="Goofball Games Logo" class="logo-img"></a></li>
+                <li><a class="nav-button" href="shop.html">Shop</a></li>
+                <li><a class="nav-button" href="leaderboard.html">Pirate Cash Leaderboard</a></li>
+                <li><a class="nav-button" href="contact.html">Suggestions/Feedback</a></li>
+                <li><a class="nav-button" href="about.html">About</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+  <div class="right-half">
+    <a class="news-box" >
+    </a>
+  </div>
+</header>
+
+  <iframe src="eglr.html" allowfullscreen="true"></iframe>
+
+  <button id="fullscreen-btn" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+  <script src="fullscreen.js"></script>
+  <script src="header-loader.js"></script>
+  <script src="news-loader.js"></script>
+  <div id="floating-text">
+  <a href="shop.html">Funded by Puffpaff Shop</a>
+</div>
+</body>
+</html>
