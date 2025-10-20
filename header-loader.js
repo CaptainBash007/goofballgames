@@ -147,6 +147,27 @@
   applyTabSettings(loadTabCfg());
   // Apply Google Docs-style defaults if no custom rename exists
   ensureDefaultsIfNoCustom();
+  // Ensure ballpit easter egg only on the index page (works on file://)
+  (function ensureBallpit(){
+    try{
+      const loadIfIndex = () => {
+        const body = document.body;
+        const isIndex = !!(
+          body && body.classList && body.classList.contains('index-page')
+        );
+        if (!isIndex) return;
+        if (window.__GB_BALLPIT_ACTIVE) return; // already active
+        if (!document.querySelector('script[src*="ballpit.js"]')){
+          const s = document.createElement('script');
+          s.src = 'ballpit.js';
+          s.async = true;
+          (document.head || document.documentElement).appendChild(s);
+        }
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadIfIndex);
+      else loadIfIndex();
+    }catch(e){ /* ignore */ }
+  })();
   // Finds or creates a placeholder and injects header.html there
   async function injectHeader(){
     const existing = document.getElementById('header');
