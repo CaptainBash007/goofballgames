@@ -2,13 +2,10 @@ const fullscreenBtn = document.getElementById('fullscreen-btn');
 const header = document.getElementById('header');
 
 function getGameIframe(){
-    // Prefer page-specific iframe id (connor page) or any responsive iframe first
-    let el = document.querySelector('#connor-iframe') || document.querySelector('.responsive-iframe');
+    // Prefer a direct child iframe of body (most game pages use this)
+    let el = document.querySelector('body > iframe');
     if (el) return el;
-    // Prefer a direct child iframe of body (many pages use this)
-    el = document.querySelector('body > iframe');
-    if (el) return el;
-    // Other fallbacks: inside a known container or any iframe on the page
+    // Fallbacks: inside a known container or any iframe on the page
     el = document.querySelector('#EaglerCraft iframe') || document.querySelector('.game-frame') || document.querySelector('iframe');
     return el;
 }

@@ -122,26 +122,16 @@
           const games = loadCustomGames();
           const filtered = games.filter(g => g.id !== gameId);
           saveCustomGames(filtered);
-
+          
           // Remove the button from DOM
           const button = document.querySelector(`[data-custom-game-id="${gameId}"]`);
           if (button) button.remove();
-
-          // Also remove from favorites (if present) and notify favorites module
+          // Notify favorites to remove any saved favorite pointing to this button
           try {
-            const FAV_KEY = 'gbf_favorites_v1';
-            const favData = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
-            // Build the canonical href this custom game used in nav buttons
-            const href = `custom-game.html?id=${gameId}`;
-            // Build possible id forms: href, data-custom-game-id, and a custom_ prefix
-            const possibleIds = [ href, gameId, `custom_${gameId}` ];
-            const cleaned = favData.filter(id => !possibleIds.includes(id));
-            localStorage.setItem(FAV_KEY, JSON.stringify(cleaned));
-            // dispatch event so favorites UI can re-render
-            document.dispatchEvent(new Event('favorites-changed'));
-          } catch (e) {
-            // ignore
-          }
+            const id = (button && (button.getAttribute('href') || button.textContent.trim().slice(0,30)+'::0')) || '';
+            if (id) window.dispatchEvent(new CustomEvent('gb:favorites:remove', { detail: { id } }));
+            else window.dispatchEvent(new Event('gb:favorites:refresh'));
+          } catch(e) {}
         }
       });
     });

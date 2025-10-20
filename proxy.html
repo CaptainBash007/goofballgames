@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Goofball Games</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* Make sure the iframe fills the page */
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    iframe {
+      width: 100%;
+      height: calc(100% - 84px); /* match --header-h default */
+      border: none;
+      display: block;
+    }
+
+    
+
+    
+  </style>
+</head>
+<body>
+  <header id="header">
+    <div class="left-half">
+        <nav>
+      <ul>
+        <li><a class="nav-button-logo" href="index.html">Goofball Games  <img src="goofballgames.png" alt="Goofball Games Logo" class="logo-img"></a></li>
+        <li><a class="nav-button" href="shop.html">Shop</a></li>
+                <li><a class="nav-button" href="leaderboard.html">Pirate Cash Leaderboard</a></li>
+                <li><a class="nav-button" href="contact.html">Suggestions/Feedback</a></li>
+                <li><a class="nav-button" href="about.html">About</a></li>
+                
+            </ul>
+        </nav>
+    </div>
+  <div class="right-half">
+    <a class="news-box" >
+    </a>
+  </div>
+</header>
+  <iframe src="" id="proxy-frame" title="Embedded content" allowfullscreen referrerpolicy="no-referrer"></iframe>
+
+  <button id="fullscreen-btn" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+  <script src="fullscreen.js"></script>
+  <script src="header-loader.js"></script>
+  <script src="news-loader.js"></script>
+  <script>
+    // Load the target URL into the iframe safely. If your URL blocks embedding (X-Frame-Options/CSP), we'll display a message.
+    (function(){
+      var target = 'https://play.coolmathgames.eu.org.cdn.cloudflare.net/'; // Change this to your desired URL'
+      var frame = document.getElementById('proxy-frame');
+      if (!frame) return;
+      frame.src = target;
+      var loaded = false;
+      frame.addEventListener('load', function(){ loaded = true; });
+      setTimeout(function(){
+        if (!loaded) {
+          var msg = document.createElement('div');
+          msg.style.cssText = 'position:fixed;inset:auto 10px 10px 10px;background:rgba(0,0,0,0.7);color:#fff;padding:10px 12px;border-radius:8px;z-index:99999;';
+          msg.innerHTML = 'This site refused to be embedded (X-Frame-Options/CSP). Open it in a new tab: <a href="'+target+'" target="_blank" rel="noopener" style="color:#ffd">'+target+'</a>';
+          document.body.appendChild(msg);
+        }
+      }, 2000);
+    })();
+  </script>
+  <div id="floating-text">
+  <a href="shop.html">Funded by Puffpaff Shop</a>
+</div>
+</body>
+</html>
+
+
+
+
